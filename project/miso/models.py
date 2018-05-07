@@ -42,6 +42,8 @@ class Day (models.Model):
     day = models.CharField(max_length=10, choices=day_opt)
     time = models.CharField(max_length=5,choices=time_opt)
 
+    class Meta:
+        unique_together = ('day', 'time')
     def __str__(self):
         return str(self.day) + ':' + str(self.time)
 
@@ -54,9 +56,12 @@ class Real_schedule (models.Model):
         return str(self.staff_id) + ':' + str(self.day_id)
 
 
-class Possible_schedule (models.Model):
+class Possible_schedule(models.Model):
     staff_id = models.ForeignKey(Staff, on_delete= models.CASCADE)
     day_id = models.ForeignKey(Day, on_delete= models.CASCADE)
+
+    class Meta:
+        unique_together = ('staff_id', 'day_id')
 
     def __str__(self):
         return str(self.staff_id) + ':' + str(self.day_id)
