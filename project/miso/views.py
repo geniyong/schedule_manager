@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect
 from .models import *
-from .forms import *
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -12,23 +11,8 @@ class PossibleList(TemplateView):
     def get_context_data(self,**kwargs):
         qs=Possible_schedule.objects.all
         context = super(PossibleList, self).get_context_data(**kwargs)
-        context['PossibleAll'] = qs
+        context['possibleAll'] = qs
         return context
-
-
-class PossibleUpdate(CreateView):
-    template_name = 'plan/main.html'
-    model = Possible_schedule
-    form_class = PossibleForm
-
-    def get_context_data(self, **kwargs):
-        context = super(PossibleUpdate, self).get_context_data(**kwargs)
-        context['create_form'] = PossibleForm
-        context['staff_id'] = Possible_schedule.objects.all()
-        return context
-
-    def get_success_url(self):
-        return reverse('possible-list')
 
 '''
 def temppossible(request):
@@ -45,21 +29,32 @@ def temppossible(request):
 
 '''
 def temppossible(request):
+    dayList = ['월요일', '화요일', '수요일', '목요일','금요일','토요일','일요일']
     print(request.POST.get('id'))
     if request.method == 'POST':
 
-        staff_name=request.POST.get('id') # 천재용으로 받아옴 웹에서
-        
+        staff_name=request.POST.get('name') # 천재용으로 받아옴 웹에서
         query_result = Staff.objects.get(name=staff_name) # 이름으로 staff 를 필터링
+
         print(query_result.id)
         print(type(query_result))
 
-        temp_day = Day.objects.filter(day="월요일").get(time="N")
-        print(temp_day)
-        new_instance = Possible_schedule(staff_id=query_result, day_id=temp_day)
-        new_instance.save()
+        for day in dayList:
+            dayTime = request.POST.get(day)
+            print("==========dayTIme===============" + dayTime)
+            print(type(dayTime))
+            if(dayTime == '0'):
+                continue
+            dayInstance = Day.objects.filter(day=day).get(time=dayTime)
+            print(dayInstance)
+
+            new_instance = Possible_schedule(staff_id=query_result, day_id=dayInstance)
+            new_instance.save()
 
         return redirect('../')
-    else:
-        pass
-    return render(request, 'plan/main.html')
+
+    elif request.method =='GET':
+        possibleAll = Possible_schedule.objects.all()
+        context = {'possibleAll': possibleAll}
+
+    return render(request, 'plan/main.html', context)

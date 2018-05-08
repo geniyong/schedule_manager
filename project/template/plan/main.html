@@ -6,29 +6,77 @@
 </head>
 <body>
 
+<form id="frm" method="post">
+    {% csrf_token %}
+    <div>미소지기이름 : <br/><input type="text" name="name" value=""></div>
+    <div>월요일 : <select name="월요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>화요일 : <select name="화요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>수요일 : <select name="수요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>목요일 : <select name="목요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>금요일 : <select name="금요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>토요일 : <select name="토요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div>일요일 : <select name="일요일">
+        <option value=0 selected>-- 근무 불가 --</option>
+        <option value='D'>D</option>
+        <option value='D1'>D1</option>
+        <option value='M'>M</option>
+        <option value='M1'>M1</option>
+        <option value='N'>N</option>
+    </select></div>
+    <div><input type="submit" id="btn" value="전송"></div>
+</form>
+
+
 <ul>
-{% for possible in PossibleAll %}
+{% for possible in possibleAll %}
     <li>
         <h3>{{possible.staff_id}}</h3>
         <span>{{possible.day_id}}</span>
     </li>
 {% endfor %}
 </ul>
-
-<table>
-    <form action="" method ="post">
-        {% csrf_token %}
-        <table> {{ form }}</table>
-        <input type="submit" />
-    </form>
-</table>
-
-<form id="frm" method="post">
-    {% csrf_token %}
-    <div>아이디 : <br/><input type="text" name="id" value=""></div>
-   <!-- <div>비밀번호: <br/><input type="text" name="pwd" value=""></div>-->
-    <div><input type="submit" id="btn" value="전송"></div>
-</form>
 
 </body>
 </html>
