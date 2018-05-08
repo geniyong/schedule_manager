@@ -15,14 +15,6 @@
 {% endfor %}
 </ul>
 
-<table>
-    <form action="" method ="post">
-        {% csrf_token %}
-        <table> {{ form }}</table>
-        <input type="submit" />
-    </form>
-</table>
-
 <form id="frm" method="post">
     {% csrf_token %}
     <div>아이디 : <br/><input type="text" name="id" value=""></div>
