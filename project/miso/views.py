@@ -147,7 +147,7 @@ def manageNeedsUpdate(request, day):
             forupdate.needs = needs
             forupdate.save()
 
-        return redirect('./')
+        return redirect('/manager/hr/')
 
     return render(request, 'plan/manager_needs_update.html',context)
 
