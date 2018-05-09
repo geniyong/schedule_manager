@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db.transaction import on_commit
+from django.template import defaultfilters
 
 
 class Post (models.Model):
@@ -14,8 +15,8 @@ class Post (models.Model):
 class Staff (models.Model):
     name = models.CharField(max_length=45)
     phone = models.CharField(max_length=20)
-    score = models.FloatField(null=True)
-    possible_N_days = models.IntegerField(null=True)
+    score = models.FloatField(blank=True, default=50)
+    possible_N_days = models.IntegerField(blank=True, default=3)
 
     class Meta:
         unique_together = ('name', 'phone')
@@ -44,6 +45,7 @@ class Day (models.Model):
     )
     day = models.CharField(max_length=10, choices=day_opt)
     time = models.CharField(max_length=5,choices=time_opt)
+    needs = models.IntegerField(blank=True, default=5)
 
     class Meta:
         unique_together = ('day', 'time')

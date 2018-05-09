@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import *
+from .forms import *
+from django_tables2 import RequestConfig
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -98,3 +100,66 @@ def managerView(request):
 def staffView(request, staffName, staffPhone):
 
     return render(request, 'plan/main.html')
+
+
+def manageStaffView(request):
+    if request.method=="GET":
+        staffAll = Staff.objects.all()
+        context = {'staffAll':staffAll,}
+
+    elif request.method == 'POST':
+        post = request.POST
+        print(post)
+        return redirect('./')
+
+    return render(request, 'plan/manager_staff.html', context)
+
+
+def manageNeedsView(request):
+    if request.method =="GET":
+        dayAll = Day.objects.all()
+        context = {'dayAll':dayAll}
+
+    elif request.method == 'POST':
+        post = request.POST
+        print(post)
+        return redirect('./')
+    return render(request, 'plan/manager_needs.html',context)
+
+
+def manageNeedsUpdate(request, day):
+    timeList=['D','D1','M','M1','N']
+    dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
+    if request.method =="GET":
+        dayAll = Day.objects.all()
+        context = {'dayAll':dayAll, 'timeList':timeList, 'dayList':dayList, 'currentDay': day}
+
+    elif request.method == 'POST':
+        post = request.POST
+        currentday = day
+        print(post)
+        for time in timeList:
+            forupdate = Day.objects.filter(day=currentday)
+            needs = post.get(time)
+            if needs == '':
+                continue
+            forupdate=forupdate.get(time=time)
+            forupdate.needs = needs
+            forupdate.save()
+
+        return redirect('./')
+
+    return render(request, 'plan/manager_needs_update.html',context)
+
+
+'''
+instance 뽑아내는 예제
+    if request.method=="GET":
+        staffAll = Staff.objects.all()
+        for instance in staffAll:
+            staffName = instance.name
+            staffPhone = instance.phone
+            staffScore = instance.score
+            staffPossibleDay = instance.possible_N_days
+        context = {'staffAll' : staffAll}
+'''

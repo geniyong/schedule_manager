@@ -67,11 +67,32 @@
     padding: 30px;
   }
 
+
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 15%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+/* form 태그 간 줄바꿈현상 해결 (줄안바꾸게 style) */
+  form {
+      display: inline;
+  }
+
   </style>
 </head>
 
 <body>
-
     <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -111,9 +132,41 @@
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>간단한 사이드바</h1>
-          <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
+          <h1>필요인력 관리</h1>
+          <p>요일 및 시간대 별 필요 미소지기 수</p>
 
+          {% for day in dayList %}
+          <form action="/manager/hr/update/{{day}}/">
+            <button class="btn" type="submit">{{day}}</button>
+          </form>
+          {% endfor %}
+
+          <table>
+          <tr>
+            <th>Time</th>
+            <th>{{currentDay}}</th>
+          </tr>
+
+
+          <form id='needsUpdate' method="post">
+           {% csrf_token %}
+          {% for time in timeList %}
+          <tr>
+            <td>{{time}}</td>
+            <th>
+              <input type="number" name={{time}} min="3", max="30" value="">
+            </th>
+          </tr>
+          {% endfor %}
+        </table>
+        <br>
+
+          <button class="btn" type="submit">수정 내용 등록</button>
+          </form>
+
+          <form method="get" action="/manager/hr/">
+          <button class="btn" type="submit">취소</button>
+          </form>
         </div>
       </div>
       <!-- /본문 -->

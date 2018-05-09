@@ -67,11 +67,27 @@
     padding: 30px;
   }
 
+
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 70%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
   </style>
 </head>
 
 <body>
-
     <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -111,9 +127,65 @@
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>간단한 사이드바</h1>
-          <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
+          <h1>필요인력 관리</h1>
+          <p>요일 및 시간대 별 필요 미소지기 수</p>
 
+          <table>
+          <tr>
+            <th>Time</th>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+            <th>토</th>
+            <th>일</th>
+          </tr>
+          <tr>
+            <td>D</td>
+            {% for day in dayAll %}
+            {% if day.time == "D" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>D1</td>
+            {% for day in dayAll %}
+            {% if day.time == "D1" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>M</td>
+            {% for day in dayAll %}
+            {% if day.time == "M" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>M1</td>
+               {% for day in dayAll %}
+            {% if day.time == "M1" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>N</td>
+                  {% for day in dayAll %}
+            {% if day.time == "N" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+        </table>
+        <br>
+          <form action="/manager/hr/update/월요일/">
+          <button class="btn" type="submit">필요인력 수정하러 가기</button>
+          </form>
         </div>
       </div>
       <!-- /본문 -->
