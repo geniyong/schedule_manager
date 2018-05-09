@@ -17,6 +17,9 @@ class Staff (models.Model):
     score = models.FloatField(null=True)
     possible_N_days = models.IntegerField(null=True)
 
+    class Meta:
+        unique_together = ('name', 'phone')
+
     def __str__(self):
         return str(self.name)
 

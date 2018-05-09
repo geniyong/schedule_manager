@@ -28,7 +28,7 @@ def temppossible(request):
     return render(request, 'plan/main.html', {'form':form})
 
 '''
-def temppossible(request):
+def possibleCreateRetrieveView(request):
     dayList = ['월요일', '화요일', '수요일', '목요일','금요일','토요일','일요일']
     print(request.POST.get('id'))
     if request.method == 'POST':
@@ -51,10 +51,50 @@ def temppossible(request):
             new_instance = Possible_schedule(staff_id=query_result, day_id=dayInstance)
             new_instance.save()
 
-        return redirect('../')
+        return redirect('./')
 
     elif request.method =='GET':
         possibleAll = Possible_schedule.objects.all()
         context = {'possibleAll': possibleAll}
 
     return render(request, 'plan/main.html', context)
+
+
+
+def loginView(request):
+    if request.method == 'POST':
+        post = request.POST
+        staffName=post.get('name')
+        staffPhone=post.get('phone')
+
+        if (staffName == 'manager' and staffPhone == '01012345678'):
+            return redirect('../manager/')
+
+        print(staffName + ':' + staffPhone)
+        qs = Staff.objects.filter(name=staffName)
+        if qs.count()==0:
+            newInstance = Staff(name=staffName, phone=staffPhone)
+            newInstance.save()
+
+        else:
+            qs = Staff.objects.filter(phone=staffPhone)
+            if (qs.count==0):
+                newInstance = Staff(name=staffName, phone=staffPhone)
+                newInstance.save()
+
+        return redirect('../staff/'+staffName+'/'+staffPhone+'/')
+
+    elif request.method == 'GET':
+        pass
+
+    return render(request, 'plan/login.html')
+
+
+def managerView(request):
+
+    return render(request, 'plan/manager.html')
+
+
+def staffView(request, staffName, staffPhone):
+
+    return render(request, 'plan/main.html')
