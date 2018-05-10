@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import *
 from .forms import *
-from django_tables2 import RequestConfig
+# from django_tables2 import RequestConfig
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -30,6 +30,8 @@ def temppossible(request):
     return render(request, 'plan/main.html', {'form':form})
 
 '''
+
+
 def possibleCreateRetrieveView(request):
     dayList = ['월요일', '화요일', '수요일', '목요일','금요일','토요일','일요일']
     print(request.POST.get('id'))
@@ -151,6 +153,16 @@ def manageNeedsUpdate(request, day):
 
     return render(request, 'plan/manager_needs_update.html',context)
 
+# 페이지 확인을 위한 임시 뷰
+def indexTest(request):
+    return render(request, 'plan/index.html')
+
+# 가능스케줄 페이지 임시 뷰
+def possibleSchedulesView(request):
+    if request.method=="GET":
+        staffAll = Staff.objects.all()
+        context = {'staffAll':staffAll,}
+    return render(request, 'plan/Staff_inquire.html', context)
 
 '''
 instance 뽑아내는 예제
