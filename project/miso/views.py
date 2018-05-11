@@ -163,15 +163,24 @@ def manageNeedsUpdate(request, day):
 
     elif request.method == 'POST':
         post = request.POST
-        currentday = day
         print(post)
+        currentday = day
         for time in timeList:
             forupdate = Day.objects.filter(day=currentday)
-            needs = post.get(time)
-            if needs == '':
-                continue
-            forupdate=forupdate.get(time=time)
-            forupdate.needs = needs
+            needsList = post.getlist(time)
+            forupdate = forupdate.get(time=time)
+
+            if needsList[0] == '':
+                if needsList[1] == '':
+                    forupdate.needs_newcomer = int(forupdate.needs) // 3
+                else:
+                    forupdate.needs_newcomer= needsList[1]
+            else:
+                forupdate.needs = needsList[0]
+                if needsList[1] == '':
+                    forupdate.needs_newcomer = int(forupdate.needs) // 3
+                else:
+                    forupdate.needs_newcomer= needsList[1]
             forupdate.save()
 
         return redirect('/manager/hr/')

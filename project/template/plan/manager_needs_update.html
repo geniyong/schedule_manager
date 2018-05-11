@@ -131,8 +131,9 @@
 
           <table class="table table-condensed">
           <tr>
-            <th>Time</th>
             <th>{{currentDay}}</th>
+            <th>전체 미소지기</th>
+            <th>신입 미소지기</th>
           </tr>
 
 
@@ -141,6 +142,9 @@
           {% for time in timeList %}
           <tr>
             <td>{{time}}</td>
+            <th>
+              <input type="number" name={{time}} min="3", max="30" value="">
+            </th>
             <th>
               <input type="number" name={{time}} min="3", max="30" value="">
             </th>

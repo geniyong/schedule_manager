@@ -44,9 +44,11 @@ class Day (models.Model):
         ('M1', '늦미들'),
         ('N', '마감'),
     )
+
     day = models.CharField(max_length=10, choices=day_opt)
     time = models.CharField(max_length=5,choices=time_opt)
     needs = models.IntegerField(blank=True, default=5)
+    needs_newcomer = models.IntegerField(blank=True, default=2)
 
     class Meta:
         unique_together = ('day', 'time')

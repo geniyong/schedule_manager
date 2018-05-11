@@ -11,7 +11,7 @@ admin.site.register(Staff, StaffAdmin)
 
 
 class DayAdmin(admin.ModelAdmin):
-    list_display = ('id', 'day', 'time', 'needs')
+    list_display = ('id', 'day', 'time', 'needs', 'needs_newcomer')
 
 
 admin.site.register(Day, DayAdmin)
