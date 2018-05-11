@@ -105,13 +105,27 @@ def staffView(request, staffName, staffPhone):
 
 
 def manageStaffView(request):
+    staffAll = Staff.objects.all()
+
     if request.method=="GET":
-        staffAll = Staff.objects.all()
         context = {'staffAll':staffAll,}
 
     elif request.method == 'POST':
         post = request.POST
         print(post)
+        for staff in staffAll:
+            postedList=post.getlist(str(staff))
+            print(postedList)
+            if(postedList[0] != ''): # score 평가점수 수정
+                staff.score=postedList[0]
+
+            if(len(postedList) == 2) : # newcomer 신입여부 수정
+                staff.newcomer = True
+            else:
+                staff.newcomer = False
+
+            staff.save()
+
         return redirect('./')
 
     return render(request, 'plan/manager_staff.html', context)

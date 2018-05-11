@@ -17,12 +17,13 @@ class Staff (models.Model):
     phone = models.CharField(max_length=20)
     score = models.FloatField(blank=True, default=50)
     possible_N_days = models.IntegerField(blank=True, default=3)
+    newcomer = models.BooleanField(blank=True, default=False)
 
     class Meta:
         unique_together = ('name', 'phone')
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name + ":" + self.phone)
 
 class Day (models.Model):
 

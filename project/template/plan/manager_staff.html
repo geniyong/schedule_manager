@@ -122,6 +122,7 @@
             <th>전화번호</th>
             <th>평가 점수</th>
             <th>평가 수정</th>
+            <th>신입</th>
           </tr>
           </thead>
           <tbody>
@@ -136,6 +137,9 @@
             <th>{{staff.score}}</th>
             <th>
               <input type="number" name={{name}} min="10" max="100" value="" step="0.01">
+            </th>
+              <th>
+              <input type="checkbox" name={{name}} value="1" {% if staff.newcomer == 1 %} checked {% endif %}>
             </th>
           </tr>
             {% endwith %}
