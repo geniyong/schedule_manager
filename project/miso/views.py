@@ -1,11 +1,22 @@
 from django.shortcuts import render,redirect
 from .models import *
 from .forms import *
+from .coremodule import *
 # from django_tables2 import RequestConfig
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 # Create your views here.
+
+
+def runSchedule():
+    print("runScheudle")
+
+    return
+
+def runScheduleView():
+    pass
+
 
 class PossibleList(TemplateView):
     template_name = 'plan/main.html'
@@ -177,7 +188,6 @@ def possibleSchedulesView(request):
         staffAll = Staff.objects.all()
         context = {'staffAll':staffAll,}
     return render(request, 'plan/Staff_inquire.html', context)
-
 '''
 instance 뽑아내는 예제
     if request.method=="GET":
