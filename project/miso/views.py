@@ -8,7 +8,98 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 # Create your views here.
 
+def runSchedule():
+    originList = []
+    newList = []
+    dayList = ['일요일', '금요일', '토요일', '월요일', '화요일', '수요일', '목요일']
+    timeList = ['D','N','D1','M','M1']
 
+    # day의 real_origin과 real_newcomer 초기화
+    for day in Day.objects.all():
+        day.real_newcomer = 0
+        day.real_origin = 0
+        day.save()
+
+    # Staff 분리, ordering
+    qs = Staff.objects.all().order_by('-score')
+    for staff in qs:
+        if(staff.newcomer == True):
+            newList.append(staff)
+
+        else:
+            originList.append(staff)
+
+    print(originList)
+    print(newList)
+
+    # 기존 스태프 스케쥴링
+    for staff in originList:
+        count = 0
+        limit = staff.possible_N_days
+        possible = Possible_schedule.objects.filter(staff_id=staff)
+        print(possible)
+        print(limit)
+
+        for day in dayList:
+            temp = 0 # 그 날에 scheduling이 되었는가
+            if count >= limit:
+                break
+            for time in timeList:
+                if temp != 0:
+                    break
+                temp2 = Day.objects.get(day=day, time=time) #### day model
+                if temp2.needs - temp2.needs_newcomer <= temp2.real_origin: # 충분한 자리가 있는가?
+                    break
+                for pos in possible:
+                    if pos.day_id == temp2:
+                        # day에 자리가 있으면 추가
+                        createRealSchedule(staff.id, temp2.id)
+                        print(pos)
+                        temp = 1
+                        count = count + 1
+                        temp2.real_origin = temp2.real_origin + 1
+                        temp2.save
+                        break
+
+    # 신규 스태프 스케쥴링
+    for staff in newList:
+        count = 0
+        limit = staff.possible_N_days
+        possible = Possible_schedule.objects.filter(staff_id=staff)
+        print(possible)
+        print(limit)
+
+        for day in dayList:
+            temp = 0  # 그 날에 scheduling이 되었는가
+            if count >= limit:
+                break
+            for time in timeList:
+                if temp != 0:
+                    break
+                temp2 = Day.objects.get(day=day, time=time)  #### day model
+                if temp2.needs_newcomer <= temp2.real_newcomer: # 충분한 자리가 있는가?
+                    break
+                for pos in possible:
+                    if pos.day_id == temp2:
+                        createRealSchedule(staff.id, temp2.id)
+                        print(pos)
+                        temp = 1
+                        count = count + 1
+                        temp2.real_newcomer = temp2.real_newcomer + 1
+                        temp2.save
+                        break
+
+    return True
+# Real_schedule 추가
+def createRealSchedule(staff, day):  # Staff의 id, Day의 id
+    print("Real Schedule 생성 ...")
+    stf = Staff.objects.get(pk=staff)
+    da = Day.objects.get(pk=day)
+    rs = Real_schedule(staff_id=stf, day_id=da)
+    rs.save()
+
+    return
+'''
 def runSchedule():
     originList = []
     newList = []
@@ -49,7 +140,7 @@ def runSchedule():
             break
 
     return True
-
+'''
 
 def runScheduleView(request):
     if(runSchedule()):
