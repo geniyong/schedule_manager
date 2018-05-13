@@ -1,0 +1,139 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+  <title>schedule enrollment</title>
+   <style>
+    body{ 
+     width:960px; 
+     margin:20px auto; 
+     background:#ddd;
+     }
+
+     .container {
+     background:#fff url(bg.gif) repeat-y top left;
+     width:960px;
+     }
+	
+    .content { 
+     width:660px; 
+     height:300px; 
+     float:right;
+     }
+	
+     .sidebar {
+     width:300px; 
+     height:400px; 
+     float:left;}
+	
+     .header{ 
+     height:50px; 
+     background:#ccc; 
+     }
+
+     .clear {
+     clear:both;
+     }
+   </style>
+</head>
+<body>
+  <div class="header">	
+   근무가능시간 등록
+  </div>
+
+  <div class="container">
+      <div class="content">
+
+<from id="frm" method="post">
+    {% csrf_token %}
+	<div>희망근무일수 : <select name="희망근무일수">
+        <option value='3' selected>3일</option>
+        <option value='4'>4일</option>
+        <option value='5'>5일</option>
+        </select></div>
+
+        <table>
+          <thead>
+           <tr>
+             <td> time </td>
+             <th>월요일</th>
+             <th>화요일</th>
+             <th>수요일</th>
+             <th>목요일</th>
+             <th>금요일</th>
+             <th>토요일</th>
+             <th>일요일</th>
+           </tr>
+          </thead>
+         
+        <tbody>
+        <tr>
+             <td>오픈</td>
+             <td><input type="checkbox" name="D" value="월요일"></td>
+             <td><input type="checkbox" name="D" value="화요일"></td>
+             <td><input type="checkbox" name="D" value="수요일"></td>
+             <td><input type="checkbox" name="D" value="목요일"></td>
+             <td><input type="checkbox" name="D" value="금요일"></td>
+             <td><input type="checkbox" name="D" value="토요일"></td>
+             <td><input type="checkbox" name="D" value="일요일"></td>
+        </tr>
+
+        <tr>
+             <td>준오픈</td>
+             <td><input type="checkbox" name="D1" value="월요일"></td>
+             <td><input type="checkbox" name="D1" value="화요일"></td>
+             <td><input type="checkbox" name="D1" value="수요일"></td>
+             <td><input type="checkbox" name="D1" value="목요일"></td>
+             <td><input type="checkbox" name="D1" value="금요일"></td>
+             <td><input type="checkbox" name="D1" value="토요일"></td>
+             <td><input type="checkbox" name="D1" value="일요일"></td>
+        </tr>
+
+        <tr>
+             <td>미들</td>
+             <td><input type="checkbox" name="M" value="월요일"></td>
+             <td><input type="checkbox" name="M" value="화요일"></td>
+             <td><input type="checkbox" name="M" value="수요일"></td>
+             <td><input type="checkbox" name="M" value="목요일"></td>
+             <td><input type="checkbox" name="M" value="금요일"></td>
+             <td><input type="checkbox" name="M" value="토요일"></td>
+             <td><input type="checkbox" name="M" value="일요일"></td>
+        </tr>
+
+        <tr>
+             <td>늦미들</td>
+             <td><input type="checkbox" name="M1" value="월요일"></td>
+             <td><input type="checkbox" name="M1" value="화요일"></td>
+             <td><input type="checkbox" name="M1" value="수요일"></td>
+             <td><input type="checkbox" name="M1" value="목요일"></td>
+             <td><input type="checkbox" name="M1" value="금요일"></td>
+             <td><input type="checkbox" name="M1" value="토요일"></td>
+             <td><input type="checkbox" name="M1" value="일요일"></td>
+        </tr>
+
+        <tr>
+             <td>마감</td>
+             <td><input type="checkbox" name="N" value="월요일"></td>
+             <td><input type="checkbox" name="N" value="화요일"></td>
+             <td><input type="checkbox" name="N" value="수요일"></td>
+             <td><input type="checkbox" name="N" value="목요일"></td>
+             <td><input type="checkbox" name="N" value="금요일"></td>
+             <td><input type="checkbox" name="N" value="토요일"></td>
+             <td><input type="checkbox" name="N" value="일요일"></td>
+        </tr>
+     </tbody>
+</table>
+
+<div><input type="submit" id="btn" value="전송"></div>
+  </form>
+<div class="sidebar">
+             <li><a href="#">근무가능시간 등록</a></li>
+             <li><a href="#">실제근무배정 확인</a></li>
+</div>
+		
+<div class="clear"></div>
+	</div>
+	
+<div class="clear"></div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, render_to_response
 from .models import *
 from .forms import *
 from .coremodule import *
@@ -10,12 +10,51 @@ from django.http import HttpResponseRedirect
 
 
 def runSchedule():
-    print("runScheudle")
+    originList = []
+    newList = []
+    dayList = ['일요일', '금요일', '토요일', '월요일', '화요일', '수요일', '목요일', '금요일']
+    timeList = ['D','N','D1','M','M1']
+    dayOrder = []
 
-    return
+    qs = Staff.objects.all().order_by('-score')
+    for staff in qs:
+        if(staff.newcomer == True):
+            newList.append(staff)
 
-def runScheduleView():
-    pass
+        else:
+            originList.append(staff)
+
+    print(originList)
+    print(newList)
+
+    dayAll = Day.objects.all()
+    for day in dayList:
+        for dayInstance in dayAll:
+            if dayInstance.day == day:
+                pass
+
+    print("==========")
+    print(dayOrder)
+    for staff in originList:
+        count = 0
+        limit = staff.possible_N_days
+        possible = Possible_schedule.objects.filter(staff_id=staff)
+        print(possible)
+        for day in dayList:
+            for dayInstance in dayAll:
+                if dayInstance.day == day:
+                    pass
+
+        while(count < limit):
+            break
+
+    return True
+
+
+def runScheduleView(request):
+    if(runSchedule()):
+        return redirect('/manager/')
+    return render(request, 'plan/planning_running.html')
 
 
 class PossibleList(TemplateView):
@@ -47,7 +86,6 @@ def possibleCreateRetrieveView(request):
     dayList = ['월요일', '화요일', '수요일', '목요일','금요일','토요일','일요일']
     print(request.POST.get('id'))
     if request.method == 'POST':
-
         staff_name=request.POST.get('name') # 천재용으로 받아옴 웹에서
         query_result = Staff.objects.get(name=staff_name) # 이름으로 staff 를 필터링
 
@@ -82,8 +120,12 @@ def loginView(request):
         staffName=post.get('name')
         staffPhone=post.get('phone')
 
-        if (staffName == 'manager' and staffPhone == '01012345678'):
-            return redirect('../manager/')
+        if (staffName == 'manager'):
+            if(staffPhone == '01012345678'):
+                return redirect('../manager/')
+
+            else:
+                return render_to_response('plan/loginAlert.html')
 
         print(staffName + ':' + staffPhone)
         qs = Staff.objects.filter(name=staffName)
@@ -111,18 +153,26 @@ def managerView(request):
 
 
 def staffView(request, staffName, staffPhone):
+    print("---==========")
+    print(staffName)
+    print(staffPhone)
 
-    return render(request, 'plan/main.html')
+    if request.method == "POST":
+        post = request.POST
+        print(post)
+
+    return render(request, 'plan/staff_schedule_enrollment.html')
 
 
 def manageStaffView(request):
-    staffAll = Staff.objects.all()
+    staffAll = Staff.objects.all().order_by('name')
 
     if request.method=="GET":
         context = {'staffAll':staffAll,}
 
     elif request.method == 'POST':
         post = request.POST
+        print("what is a post : ", end="")
         print(post)
         for staff in staffAll:
             postedList=post.getlist(str(staff))
@@ -193,10 +243,12 @@ def indexTest(request):
 
 # 가능스케줄 페이지 임시 뷰
 def possibleSchedulesView(request):
+    dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
     if request.method=="GET":
-        staffAll = Staff.objects.all()
-        context = {'staffAll':staffAll,}
-    return render(request, 'plan/Staff_inquire.html', context)
+        staffAll = Staff.objects.all().order_by('name')
+        possibleAll = Possible_schedule.objects.all().order_by('day_id')
+        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
+    return render(request, 'plan/manager_possibles.html', context)
 '''
 instance 뽑아내는 예제
     if request.method=="GET":

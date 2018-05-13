@@ -12,12 +12,12 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
 
-  <style>
-
+    <style>
   .table {
       font-family: arial, sans-serif;
       border-collapse: collapse;
-      width: 80%;
+      width: 90%;
+      font-size:12px;
   }
 
   .td .th {
@@ -29,9 +29,22 @@
   .tr:nth-child(even) {
       background-color: #dddddd;
   }
+
+  #button_margin_inquire_nameButton {
+    margin-left: 70px;
+    margin-right: 50px;
+  }
+
+   #button_margin_inquire_dayButton {
+    margin-right: 50px;
+  }
+
+  #button_margin_inquire_dayTimeButton {
+    margin-right: 50px;
+  }
+
   </style>
 </head>
-
 <body>
     <nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
@@ -98,53 +111,81 @@
           <li><a href="#">스케줄러</a></li>
         </ul>
        	<ul class="sidebar-nav btn-padding-30">
-          <button type="button" class="btn btn-success btn-lg">Make Schedules</button>
+          <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Make Schedules</button>
        	</ul>
       </div>
       <!-- /사이드바 -->
-
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Modal body text goes here.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+            </div>
+        </div>
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>등록된 스케줄 현황</h1>
-          <p>미소지기들에 의해 등록된 직원 별 현황</p>
+          <h1>등록된 가능 스케줄 현황</h1>
+          <p>미소지기들이 등록한 스케줄 현황</p>
 
           <table class="table table-bordered table-hover">
           <thead>
           <tr>
-            <th>Time</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th>토</th>
-            <th>일</th>
+            <th>미소지기 이름</th>
+            <th>월요일</th>
+            <th>화요일</th>
+            <th>수요일</th>
+            <th>목요일</th>
+            <th>금요일</th>
+            <th>토요일</th>
+            <th>일요일</th>
           </tr>
           </thead>
           <tbody>
             {% for staff in staffAll %}
             {% with staff.name|add:":"|add:staff.phone as name%}
           <tr>
-            <td>{{forloop.counter}}</td>
-            <th>{{staff.name}}</th>
-            <th>{{staff.phone}}</th>
-            <th>{{staff.score}}</th>
+            <td>{{staff.name}}</td>
+
+            {% for day in dayList %}
+            <th>{% for possible in possibleAll %}
+            {% if possible.staff_id == staff %}
+            {% if day in possible.day_id.day %}
+              {{ possible.day_id.time }}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            </th>
+            {% endfor %}
           </tr>
             {% endwith %}
             {% endfor %}
           </tbody>
         </table>
-        <br>
-          <form action="/manager/hr/update/월요일/">
-          <button class="btn btn-default" type="submit">필요인력 수정하러 가기</button>
+          <br>
+          <form>
+            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="submit">이름으로 조회</button>
+            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="submit">요일로 조회</button>
+            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="submit">요일과 시간으로 조회</button>
           </form>
         </div>
       </div>
       <!-- /본문 -->
     </div>
 
-<script src="https://ajax.googleais.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
