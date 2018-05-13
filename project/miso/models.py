@@ -49,6 +49,8 @@ class Day (models.Model):
     time = models.CharField(max_length=5,choices=time_opt)
     needs = models.IntegerField(blank=True, default=5)
     needs_newcomer = models.IntegerField(blank=True, default=2)
+    real_origin = models.IntegerField(blank=True, default=0)
+    real_newcomer = models.IntegerField(blank=True, default=0)
 
     class Meta:
         unique_together = ('day', 'time')

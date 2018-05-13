@@ -3983,7 +3983,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: #337ab7;
 }
 .nav-stacked > li {
+  text-align: center;
+  top:20px;
   float: none;
+}
+.nav-stacked > li > a{
+  margin-bottom: 50px;
 }
 .nav-stacked > li + li {
   margin-top: 2px;
@@ -4064,6 +4069,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     float: left;
   }
 }
+
 .navbar-collapse {
   padding-right: 15px;
   padding-left: 15px;
@@ -5701,6 +5707,7 @@ button.close {
 .modal-open {
   overflow: hidden;
 }
+
 .modal {
   position: fixed;
   top: 0;

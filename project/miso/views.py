@@ -153,15 +153,69 @@ def managerView(request):
 
 
 def staffView(request, staffName, staffPhone):
-    print("---==========")
-    print(staffName)
-    print(staffPhone)
+    dayList = ['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
+    context = {"staffName" : staffName, "staffPhone" : staffPhone, "dayList" : dayList}
+    print("==========")
+    timeList = ['D','D1','M','M1','N']
+    possibleDays=[]
+    bolt=0
+    weekendCount = 0
 
+    staff = Staff.objects.filter(name=staffName).get(phone=staffPhone)
+    print(staff)
+    
     if request.method == "POST":
         post = request.POST
         print(post)
+        for time in timeList:            
+            postList = post.getlist(time)
+            for day in postList:
+                for a in possibleDays:
+                    bolt=0
+                    if(a==day):
+                        bolt=1
+                        break
+                if bolt != 1:
+                    possibleDays.append(day)
+        print("===============")
+        print(possibleDays)
+        for day in possibleDays:
+            if day == '토요일' or day == '일요일':
+                weekendCount += 1
 
-    return render(request, 'plan/staff_schedule_enrollment.html')
+        print("주말수 : " + str(weekendCount))
+        if weekendCount == 0 :
+            context['message'] = "최소한 주말 하루는 추가 해주세요!!(토요일, 일요일)"
+            return render_to_response('plan/staffPossibleAlert.html', context)
+
+        if len(possibleDays) < int(post.get("희망근무일수")) :
+            context['message'] = "희망근무일수 보다 신청한 근무요일이 적습니다!!"
+            return render_to_response('plan/staffPossibleAlert.html', context)
+        
+        staff.possible_N_days = post.get("희망근무일수")
+        staff.save()
+        print(staff.possible_N_days)
+
+        # possible schedule 초기화 (모두 삭제)
+        Possible_schedule.objects.filter(staff_id=staff).delete()
+
+        for time in timeList:
+            postList = post.getlist(time)
+            print(postList)
+
+            for day in postList:
+                dayInstance = Day.objects.filter(day=day).get(time=time)
+                new_instance = Possible_schedule(staff_id=staff, day_id=dayInstance)
+                new_instance.save()
+
+        return redirect("/staff/"+staffName+"/"+staffPhone+"/")
+    elif request.method == "GET":
+        possible = Possible_schedule.objects.filter(staff_id=staff)
+
+        context["day_num"] = staff.possible_N_days
+        context["possibleAll"] = possible
+        print(possible)
+    return render(request, 'plan/staff_schedule_enrollment.html', context)
 
 
 def manageStaffView(request):

@@ -30,10 +30,6 @@
       background-color: #dddddd;
   }
 
-  .form-group input {
-    width: 50%;
-  }
-
   #button_margin_inquire_nameButton {
     margin-left: 70px;
     margin-right: 50px;
@@ -46,28 +42,57 @@
   #button_margin_inquire_dayTimeButton {
     margin-right: 50px;
   }
-  </style>
 
+  </style>
 </head>
 <body>
     <nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	      </button>
 	      <a class="navbar-brand" href="/manager/">Schedule Manager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+		<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+		<li><a href="#">Link</a></li>
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		  <ul class="dropdown-menu" role="menu">
+		    <li><a href="#">Action</a></li>
+		    <li><a href="#">Another action</a></li>
+		    <li><a href="#">Something else here</a></li>
+		    <li class="divider"></li>
+		    <li><a href="#">Separated link</a></li>
+		    <li class="divider"></li>
+		    <li><a href="#">One more separated link</a></li>
+		  </ul>
+		</li>
+	      </ul>
+	      <form class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+		  <input type="text" class="form-control" placeholder="Search">
+		</div>
+		<button type="submit" class="btn btn-default">Submit</button>
+	      </form>
 	      <ul class="nav navbar-nav navbar-right">
 		<li><a href="#">Link</a></li>
 		<li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
 		  <ul class="dropdown-menu" role="menu">
-		    <li><a href="#">naver</a></li>
-		    <li><a href="#">hanmail</a></li>
-		    <li><a href="#">google</a></li>
-		    <li><a href="#">yahoo</a></li>
+		    <li><a href="#">Action</a></li>
+		    <li><a href="#">Another action</a></li>
+		    <li><a href="#">Something else here</a></li>
+		    <li class="divider"></li>
+		    <li><a href="#">Separated link</a></li>
 		  </ul>
 		</li>
 	      </ul>
@@ -83,39 +108,39 @@
           <li><a href="/manager/possible">가능 스케줄</a></li>
           <li><a href="/manager/hr">필요 인력</a></li>
           <li><a href="/manager/real">실제 스케줄</a></li>
+          <li><a href="#">스케줄러</a></li>
         </ul>
-       	<ul class="sidebar-nav">
+       	<ul class="sidebar-nav btn-padding-30">
           <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Make Schedules</button>
        	</ul>
       </div>
       <!-- /사이드바 -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialong" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-                <h5 class="modal-title">확인 절차</h5>
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
               <div class="modal-body">
-                <p>스케줄 생성을 계속 진행하시겠습니까?</p>
+                <p>Modal body text goes here.</p>
               </div>
               <div class="modal-footer">
-                <form action="/manager/planning">
-                    <button type="submit" class="btn btn-primary">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                </form>
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
-          </div>
+            </div>
         </div>
-
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
           <h1>등록된 가능 스케줄 현황</h1>
           <p>미소지기들이 등록한 스케줄 현황</p>
 
-           <table class="table table-bordered table-hover">
+          <table class="table table-bordered table-hover">
           <thead>
           <tr>
             <th>미소지기 이름</th>
@@ -149,37 +174,19 @@
             {% endfor %}
           </tbody>
         </table>
-            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="button" data-toggle="modal" data-target="#nameModal">이름으로 조회</button>
-            <div class="modal fade" id="nameModal" tabindex="-1" role="dialong" aria-labelledby="myModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 class="modal-title">확인 절차</h5>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group">
-                     <form action="/manager/staff_inquire_name/" method="post">
-                        <label for="inquireName">조회 할 이름</label>
-                        <input type="text" class="form-control" id="inquireName" placeholder="조회할 미소지기의 이름을 입력하세요.">
-                         <br>
-                        <button type="submit" class="btn btn-primary">OK</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                    </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="button">요일로 조회</button>
-            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="button">요일과 시간으로 조회</button>
+          <br>
+          <form>
+            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="submit">이름으로 조회</button>
+            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="submit">요일로 조회</button>
+            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="submit">요일과 시간으로 조회</button>
+          </form>
         </div>
       </div>
       <!-- /본문 -->
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>

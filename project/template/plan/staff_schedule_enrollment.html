@@ -1,61 +1,95 @@
-﻿<!doctype html>
-<html lang="en">
+{% load static %}
+<html>
 <head>
- <meta charset="utf-8">
-  <title>schedule enrollment</title>
-   <style>
-    body{ 
-     width:960px; 
-     margin:20px auto; 
-     background:#ddd;
-     }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-     .container {
-     background:#fff url(bg.gif) repeat-y top left;
-     width:960px;
-     }
-	
-    .content { 
-     width:660px; 
-     height:300px; 
-     float:right;
-     }
-	
-     .sidebar {
-     width:300px; 
-     height:400px; 
-     float:left;}
-	
-     .header{ 
-     height:50px; 
-     background:#ccc; 
-     }
+  <title>Scheduler</title>
 
-     .clear {
-     clear:both;
-     }
-   </style>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
+  <style>
+      .form-group > .form-control {
+        left-margin: -5px;
+      }
+
+  </style>
+
+    <script type="text/javascript">
+        function openPopup(){
+        var delConfirm = confirm('스케줄을 제출하시겠습니까?');
+        if (delConfirm) {
+        }
+        else {
+        alert('제출이 취소되었습니다.');
+        }
+        return delConfirm;
+        }
+   </script>
 </head>
 <body>
-  <div class="header">	
-   근무가능시간 등록
-  </div>
+ <nav class="navbar navbar-default" role="navigation">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/staff/">Schedule Manager</a>
+	    </div>
 
-  <div class="container">
-      <div class="content">
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
+	      <ul class="nav navbar-nav navbar-right">
+		<li><a href="#">Link</a></li>
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
+		  <ul class="dropdown-menu" role="menu">
+		    <li><a href="#">naver</a></li>
+		    <li><a href="#">hanmail</a></li>
+		    <li><a href="#">google</a></li>
+		    <li><a href="#">yahoo</a></li>
+		  </ul>
+		</li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
 
-<from id="frm" method="post">
-    {% csrf_token %}
-	<div>희망근무일수 : <select name="희망근무일수">
-        <option value='3' selected>3일</option>
-        <option value='4'>4일</option>
-        <option value='5'>5일</option>
-        </select></div>
+	<div id="page-wrapper">
+      <!-- 사이드바 -->
+      <div id="sidebar-wrapper">
+        <ul class="nav nav-pills nav-stacked navbar-collapse">
+          <li><a href="/manager/staff">근무 가능시간 등록</a></li>
+          <li><a href="/manager/possible">실제근무배정 확인</a></li>
+        </ul>
+      </div>
+        <!-- /사이드바 -->
 
-        <table>
+        <!-- 본문 -->
+		<div id="page-content-wrapper">
+        <div class="container-fluid">
+          <h1>근무가능시간 등록</h1>
+          <p>나의 스케줄 입력하기</p>
+
+          <form class="form-horizontal" onSubmit="return openPopup()", method="post">
+            {% csrf_token %}
+
+          <div class="form-group">
+             <h4 class="col-sm-2">희망근무일수 :</h4>
+                <div class="col-sm-2">
+                <select class="form-control" name="희망근무일수">
+                    <option value='3' selected>3일</option>
+                    <option value='4'>4일</option>
+                    <option value='5'>5일</option>
+                </select>
+                </div>
+          </div>
+
+        <table class="table table-bordered table-condensed table-hover">
           <thead>
            <tr>
-             <td> time </td>
+             <th>시간대</th>
              <th>월요일</th>
              <th>화요일</th>
              <th>수요일</th>
@@ -65,75 +99,172 @@
              <th>일요일</th>
            </tr>
           </thead>
-         
         <tbody>
         <tr>
              <td>오픈</td>
-             <td><input type="checkbox" name="D" value="월요일"></td>
-             <td><input type="checkbox" name="D" value="화요일"></td>
-             <td><input type="checkbox" name="D" value="수요일"></td>
-             <td><input type="checkbox" name="D" value="목요일"></td>
-             <td><input type="checkbox" name="D" value="금요일"></td>
-             <td><input type="checkbox" name="D" value="토요일"></td>
-             <td><input type="checkbox" name="D" value="일요일"></td>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D" value="월요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="D" value="화요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D" value="수요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="D" value="목요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D" value="금요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D" value="토요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D" value="일요일"></th>
+             </label>
         </tr>
 
         <tr>
              <td>준오픈</td>
-             <td><input type="checkbox" name="D1" value="월요일"></td>
-             <td><input type="checkbox" name="D1" value="화요일"></td>
-             <td><input type="checkbox" name="D1" value="수요일"></td>
-             <td><input type="checkbox" name="D1" value="목요일"></td>
-             <td><input type="checkbox" name="D1" value="금요일"></td>
-             <td><input type="checkbox" name="D1" value="토요일"></td>
-             <td><input type="checkbox" name="D1" value="일요일"></td>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D1" value="월요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="D1" value="화요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D1" value="수요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="D1" value="목요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D1" value="금요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D1" value="토요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="D1" value="일요일"></th>
+             </label>
         </tr>
-
         <tr>
              <td>미들</td>
-             <td><input type="checkbox" name="M" value="월요일"></td>
-             <td><input type="checkbox" name="M" value="화요일"></td>
-             <td><input type="checkbox" name="M" value="수요일"></td>
-             <td><input type="checkbox" name="M" value="목요일"></td>
-             <td><input type="checkbox" name="M" value="금요일"></td>
-             <td><input type="checkbox" name="M" value="토요일"></td>
-             <td><input type="checkbox" name="M" value="일요일"></td>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M" value="월요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="M" value="화요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M" value="수요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="M" value="목요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M" value="금요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M" value="토요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M" value="일요일"></th>
+             </label>
         </tr>
 
         <tr>
              <td>늦미들</td>
-             <td><input type="checkbox" name="M1" value="월요일"></td>
-             <td><input type="checkbox" name="M1" value="화요일"></td>
-             <td><input type="checkbox" name="M1" value="수요일"></td>
-             <td><input type="checkbox" name="M1" value="목요일"></td>
-             <td><input type="checkbox" name="M1" value="금요일"></td>
-             <td><input type="checkbox" name="M1" value="토요일"></td>
-             <td><input type="checkbox" name="M1" value="일요일"></td>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M1" value="월요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="M1" value="화요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M1" value="수요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="M1" value="목요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M1" value="금요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M1" value="토요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="M1" value="일요일"></th>
+             </label>
         </tr>
 
         <tr>
              <td>마감</td>
-             <td><input type="checkbox" name="N" value="월요일"></td>
-             <td><input type="checkbox" name="N" value="화요일"></td>
-             <td><input type="checkbox" name="N" value="수요일"></td>
-             <td><input type="checkbox" name="N" value="목요일"></td>
-             <td><input type="checkbox" name="N" value="금요일"></td>
-             <td><input type="checkbox" name="N" value="토요일"></td>
-             <td><input type="checkbox" name="N" value="일요일"></td>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="N" value="월요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="N" value="화요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="N" value="수요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th ><input type="checkbox" name="N" value="목요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="N" value="금요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="N" value="토요일"></th>
+             </label>
+             <label class="checkbox-inline">
+             <th><input type="checkbox" name="N" value="일요일"></th>
+             </label>
         </tr>
-     </tbody>
-</table>
+        </tbody>
+        </table>
+        <input type="submit" class="btn btn-default" id="btn" value="제출"><br><br>
 
-<div><input type="submit" id="btn" value="전송"></div>
-  </form>
-<div class="sidebar">
-             <li><a href="#">근무가능시간 등록</a></li>
-             <li><a href="#">실제근무배정 확인</a></li>
-</div>
-		
-<div class="clear"></div>
-	</div>
-	
-<div class="clear"></div>
+        <h1>등록된 근무가능시간</h1>
+	    <h4>희망근무일수 : {{day_num}}</h4>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>월요일</th>
+                <th>화요일</th>
+                <th>수요일</th>
+                <th>목요일</th>
+                <th>금요일</th>
+                <th>토요일</th>
+                <th>일요일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                 <td>근무시간</td>
+                 {% for day in dayList %}
+                <th>{% for possible in possibleAll %}
+                 {% if day in possible.day_id.day %}
+                {{ possible.day_id.time }}
+                {% endif %}
+                {% endfor %}
+                </th>
+                 {% endfor %}
+            </tr>
+         </tbody>
+        </table>
+
+        </form>
+        </div>
+        </div>
+      <!-- /본문 -->
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>

@@ -1,0 +1,140 @@
+{% load static %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <title>Scheduler</title>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
+
+<style>
+    body{
+     width:960px;
+     margin:20px auto;
+     background:#ddd;
+     }
+
+     .container {
+     background:#fff url(bg.gif) repeat-y top left;
+     width:960px;
+     }
+
+    .content {
+     width:660px;
+     height:300px;
+     float:right;
+     }
+
+     .sidebar {
+     width:300px;
+     height:400px;
+     float:left;}
+
+     .header{
+     height:50px;
+     background:#ccc;
+     }
+
+     .clear {
+     clear:both;
+     }
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/staff/">Schedule Manager</a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
+	      <ul class="nav navbar-nav navbar-right">
+		<li><a href="#">Link</a></li>
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
+		  <ul class="dropdown-menu" role="menu">
+		    <li><a href="#">naver</a></li>
+		    <li><a href="#">hanmail</a></li>
+		    <li><a href="#">google</a></li>
+		    <li><a href="#">yahoo</a></li>
+		  </ul>
+		</li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div id="page-wrapper">
+      <!-- 사이드바 -->
+      <div id="sidebar-wrapper">
+        <ul class="nav nav-pills nav-stacked navbar-collapse">
+          <li><a href="/manager/staff">근무 가능시간 등록</a></li>
+          <li><a href="/manager/possible">실제근무배정 확인</a></li>
+        </ul>
+      </div>
+        <!-- /사이드바 -->
+
+        <!-- 본문 -->
+		<div id="page-content-wrapper">
+        <div class="container-fluid">
+          <h1>실제근무배정 확인</h1>
+          <p>실제 스케줄 조회</p>
+
+          <form id="frm" method="post">
+            {% csrf_token %}
+              <h4>희망근무일수 : </h4>
+              <select class="form-control" name="희망근무일수">
+                    <option value=0 selected>-- 근무 불가 --</option>
+                    <option value='1'>1일</option>
+                    <option value='2'>2일</option>
+                    <option value='3'>3일</option>
+                    <option value='4'>4일</option>
+                    <option value='5'>5일</option>
+                    <option value='6'>6일</option>
+                    <option value='7'>7일</option>
+              </select>
+
+            <table class="table table-bordered table-hover">
+              <thead>
+               <tr>
+                 <th></th>
+                 <th>월요일</th>
+                 <th>화요일</th>
+                 <th>수요일</th>
+                 <th>목요일</th>
+                 <th>금요일</th>
+                 <th>토요일</th>
+                 <th>일요일</th>
+               </tr>
+              </thead>
+            <tbody>
+            <tr>
+                 <td>근무시간</td>
+                 <td>{{Mon_Time}}</td>
+                 <td>{{Tue_Time}}</td>
+                 <td>{{Wed_Time}}</td>
+                 <td>{{Thu_Time}}</td>
+                 <td>{{Fri_Time}}</td>
+                 <td>{{Sat_Time}}</td>
+                 <td>{{Sun_Time}}</td>
+            </tr>
+         </tbody>
+        </table>
+          </form>
+        </div>
+      </div>
+      <!-- /본문 -->
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

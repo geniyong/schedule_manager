@@ -13,18 +13,10 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
 
   <style>
-
-/*table 수정용 style */
-
-  #page-content-wrapper button{
-    margin-right: 15px;
-    margin-bottom: 15px;
-  }
-
   .table {
       font-family: arial, sans-serif;
       border-collapse: collapse;
-      width: 60%;
+      width: 20%;
   }
 
   .td .th {
@@ -36,18 +28,11 @@
   .tr:nth-child(even) {
       background-color: #dddddd;
   }
-
-/* form 태그 간 줄바꿈현상 해결 (줄안바꾸게 style) */
-  form {
-      display: inline;
-  }
-
   </style>
-
 </head>
 
 <body>
-   <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
@@ -90,44 +75,65 @@
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>필요인력 관리</h1>
-          <p>요일 및 시간대 별 필요 미소지기 수</p>
+          <h1>이번 시즌 스케줄</h1>
+          <p>이번 시즌 스케줄 표</p>
 
-          {% for day in dayList %}
-          <form action="/manager/hr/update/{{day}}/">
-            <button class="btn btn-default btn-md" type="submit">{{day}}</button>
-          </form>
-          {% endfor %}
+          <table class="table table-condensed table-hover">
+          <thead>
+              <tr>
+                <th>#</th>
+                <th>월요일</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>D</td>
+                {% for day in dayAll %}
+                {% if day.time == "D" %}
+                <th>{{day.needs}}</th>
+                {% endif %}
+                {% endfor %}
+              </tr>
+          </tbody>
+          </table>
 
-          <table class="table table-condensed">
+          <table>
           <tr>
-            <th>{{currentDay}}</th>
-            <th>전체 미소지기</th>
-            <th>신입 미소지기</th>
+            <td>D1</td>
+            {% for day in dayAll %}
+            {% if day.time == "D1" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
           </tr>
-
-
-          <form id='needsUpdate' method="post">
-           {% csrf_token %}
-          {% for time in timeList %}
           <tr>
-            <td>{{time}}</td>
-            <th>
-              <input type="number" name={{time}} min="3", max="30" value="">
-            </th>
-            <th>
-              <input type="number" name={{time}} min="3", max="30" value="">
-            </th>
+            <td>M</td>
+            {% for day in dayAll %}
+            {% if day.time == "M" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
           </tr>
-          {% endfor %}
+          <tr>
+            <td>M1</td>
+               {% for day in dayAll %}
+            {% if day.time == "M1" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+          <tr>
+            <td>N</td>
+                  {% for day in dayAll %}
+            {% if day.time == "N" %}
+            <th>{{day.needs}} 명</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
         </table>
         <br>
-
-          <button class="btn btn-default" type="submit">수정 내용 등록</button>
-          </form>
-
-          <form method="get" action="/manager/hr/">
-          <button class="btn btn-default" type="submit">취소</button>
+          <form action="/manager/hr/update/월요일/">
+          <button class="btn btn-default" type="submit">필요인력 수정하러 가기</button>
           </form>
         </div>
       </div>
