@@ -79,7 +79,7 @@
           <h1>필요인력 관리</h1>
           <p>요일 및 시간대 별 필요 미소지기 수</p>
 
-          <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover">
           <thead>
           <tr>
             <th>Time</th>
@@ -92,47 +92,19 @@
             <th>일</th>
           </tr>
           </thead>
-          <tr>
-            <td>D</td>
+
+            {% for time in timeList %}
+            <tr>
+            <td>{{ time }}</td>
             {% for day in dayAll %}
-            {% if day.time == "D" %}
+            {% if day.time == time %}
             <th>{{day.needs}} 명</th>
             {% endif %}
             {% endfor %}
-          </tr>
-          <tr>
-            <td>D1</td>
-            {% for day in dayAll %}
-            {% if day.time == "D1" %}
-            <th>{{day.needs}} 명</th>
-            {% endif %}
+            </tr>
             {% endfor %}
-          </tr>
-          <tr>
-            <td>M</td>
-            {% for day in dayAll %}
-            {% if day.time == "M" %}
-            <th>{{day.needs}} 명</th>
-            {% endif %}
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>M1</td>
-               {% for day in dayAll %}
-            {% if day.time == "M1" %}
-            <th>{{day.needs}} 명</th>
-            {% endif %}
-            {% endfor %}
-          </tr>
-          <tr>
-            <td>N</td>
-                  {% for day in dayAll %}
-            {% if day.time == "N" %}
-            <th>{{day.needs}} 명</th>
-            {% endif %}
-            {% endfor %}
-          </tr>
         </table>
+
         <br>
           <form action="/manager/hr/update/월요일/">
           <button class="btn btn-default" type="submit">필요인력 수정하러 가기</button>

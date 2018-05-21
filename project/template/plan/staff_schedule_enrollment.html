@@ -86,10 +86,10 @@
                 </div>
           </div>
 
-        <table class="table table-bordered table-condensed table-hover">
+       <table class="table table-bordered table-condensed table-hover">
           <thead>
            <tr>
-             <th>시간대</th>
+             <th>근무시간</th>
              <th>월요일</th>
              <th>화요일</th>
              <th>수요일</th>
@@ -100,129 +100,20 @@
            </tr>
           </thead>
         <tbody>
+        {% for time in timeList %}
+        {% for str in timeStr %}
         <tr>
-             <td>오픈</td>
+            {% if forloop.counter == forloop.parentloop.counter %}
+             <td>{{ time }}  :  {{ str }}</td>
+            {% for day in dayList %}
              <label class="checkbox-inline">
-             <th><input type="checkbox" name="D" value="월요일"></th>
+             <th><input type="checkbox" name="{{time}}" value="{{day}}"></th>
              </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="D" value="화요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D" value="수요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="D" value="목요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D" value="금요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D" value="토요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D" value="일요일"></th>
-             </label>
+            {% endfor %}
+            {% endif %}
+             {% endfor %}
         </tr>
-
-        <tr>
-             <td>준오픈</td>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D1" value="월요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="D1" value="화요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D1" value="수요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="D1" value="목요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D1" value="금요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D1" value="토요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="D1" value="일요일"></th>
-             </label>
-        </tr>
-        <tr>
-             <td>미들</td>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M" value="월요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="M" value="화요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M" value="수요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="M" value="목요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M" value="금요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M" value="토요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M" value="일요일"></th>
-             </label>
-        </tr>
-
-        <tr>
-             <td>늦미들</td>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M1" value="월요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="M1" value="화요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M1" value="수요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="M1" value="목요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M1" value="금요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M1" value="토요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="M1" value="일요일"></th>
-             </label>
-        </tr>
-
-        <tr>
-             <td>마감</td>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="N" value="월요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="N" value="화요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="N" value="수요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th ><input type="checkbox" name="N" value="목요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="N" value="금요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="N" value="토요일"></th>
-             </label>
-             <label class="checkbox-inline">
-             <th><input type="checkbox" name="N" value="일요일"></th>
-             </label>
-        </tr>
+        {% endfor %}
         </tbody>
         </table>
         <input type="submit" class="btn btn-default" id="btn" value="제출"><br><br>
