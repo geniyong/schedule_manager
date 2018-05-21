@@ -26,7 +26,7 @@ SECRET_KEY = 't69@@t*hu$qgmy__c@iy0m(97))cne@3=5zj05xp-s=8(r0g7m'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-"monkey0201.iptime.org",
+# "monkey0201.iptime.org",
 ]
 
 
