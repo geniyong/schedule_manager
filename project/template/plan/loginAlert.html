@@ -2,8 +2,24 @@
 <html lang="en">
 <body>
 <script>
-alert("권한오류 : 매니저 정보를 다시 입력하세요");
+var message = "{{message}}";
+var mode = "{{mode}}";
+if(mode==1){
+alert(message);
 window.location.href = '/login/';
+}
+else if (mode == 2)
+{
+    if(confirm(message))
+    {
+        return true;
+    }
+
+    else
+    {
+        return false;
+    }
+}
 </script>
 </body>
 </html>

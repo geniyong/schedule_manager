@@ -1,5 +1,6 @@
 from audioop import max
 from numbers import Real
+from operator import is_
 
 from django.shortcuts import render,redirect, render_to_response
 from .models import *
@@ -434,7 +435,6 @@ def possibleCreateRetrieveView(request):
     return render(request, 'plan/main.html', context)
 
 
-
 def loginView(request):
     '''
     Day.objects.all().delete()
@@ -444,27 +444,35 @@ def loginView(request):
        for time in timeList:
            Day(day=day, time=time).save()
     '''
+    context = {}
     if request.method == 'POST':
         post = request.POST
         staffName=post.get('name')
         staffPhone=post.get('phone')
+        context['staffName'] = staffName
+        context['staffPhone'] = staffPhone
 
         if (staffName == 'manager'):
             if(staffPhone == '01012345678'):
                 return redirect('../manager/')
-
             else:
-                return render_to_response('plan/loginAlert.html')
+                context['message'] = "권한오류 : 매니저 정보를 다시 입력하세요"
+                context['mode'] = 1
+                return render_to_response('plan/loginAlert.html', context)
 
         print(staffName + ':' + staffPhone)
         qs = Staff.objects.filter(name=staffName)
         if qs.count()==0:
+            context['message'] = "경고 : "+staffName+" 은 등록 되어 있지 않습니다. 새로 추가하시겠습니까?"
+            context['mode'] = 2
             newInstance = Staff(name=staffName, phone=staffPhone)
             newInstance.save()
 
         else:
             qs = Staff.objects.filter(phone=staffPhone)
             if (qs.count==0):
+                context['message'] = "경고 : " + staffName + "미소지기는 이미 등록 되어 있습니다.\n" + staffPhone + "번호로 추가하시겠습니까?"
+                context['mode'] = 2
                 newInstance = Staff(name=staffName, phone=staffPhone)
                 newInstance.save()
 
