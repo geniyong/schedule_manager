@@ -1,3 +1,6 @@
+from audioop import max
+from numbers import Real
+
 from django.shortcuts import render,redirect, render_to_response
 from .models import *
 from .forms import *
@@ -6,21 +9,55 @@ from .coremodule import *
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-# Create your views here.
+
+
+    # ===============================================================
+    # ===============================================================
 
 def runSchedule():
     originList = []
     newList = []
     dayList = ['일요일', '금요일', '토요일', '월요일', '화요일', '수요일', '목요일']
     timeList = ['D','N','D1','M','M1']
+    origin_minFailList = [] # 기존미소지기 중 최소근무일수 미충족 리스트
+    new_minFailList =[] # 신입미소지기 중 최소근무일수 미충족 리스트
+    
+    # ===============================================================
+    # <Phase1>
+    # 실제 스케줄링 시작 전 Pre-Process
+    # 1. 실제 스케줄 데이터 초기화
+    # 2. 요일/날짜 마다 실제 배치 인원 초기화
+    # 3. 모든 미소지기의 complete Boolean Set : 실제 스케줄 배치가 완료되었는가에 관한 Data 초기화
+    #   // min_complete : 최소 근무일을 만족시켰는가?
+    #   ( 모든 미소지기가 최소 3일은 근무 해야 할 때, 3일도 못채웠을 경우 False, 3일 이상 배치되었다면 True )
+    #   // max_complete : 희망 근무일을 만족시켰는가?
+    #   ( 미소지기가 제출한 희망 근무일수가 5일 일 때, 5일 배치 되었을 경우 True, 4일 이하 일 경우 False )
+    # ===============================================================
 
-    # day의 real_origin과 real_newcomer 초기화
+    # 1. 실제 스케줄 데이터 초기화
+    Real_schedule.objects.all().delete()
+    print(Real_schedule.objects.all())
+    # 2. 요일/날짜 마다 실제 배치 인원 초기화
+      # day의 real_origin과 real_newcomer 초기화
     for day in Day.objects.all():
         day.real_newcomer = 0
         day.real_origin = 0
         day.save()
 
-    # Staff 분리, ordering
+    # 3. 모든 미소지기의 complete Boolean Set : 실제 스케줄 배치가 완료되었는가에 관한 Data 초기화
+      # Staff.min_complete , Staff.max_complete 초기화
+    for staff in Staff.objects.all():
+        staff.min_complete = False
+        staff.max_complete = False
+        staff.save()
+
+
+    # ===============================================================
+    # <Phase2>
+    # 스케줄링
+    # ===============================================================
+
+    # Staff 분리, ordering -> 점수 순서대로
     qs = Staff.objects.all().order_by('-score')
     for staff in qs:
         if(staff.newcomer == True):
@@ -28,69 +65,91 @@ def runSchedule():
 
         else:
             originList.append(staff)
-
     print(originList)
-    print(newList)
+   # print(newList)
 
-    # 기존 스태프 스케쥴링
+    # 기존 스태프 스케쥴링 - 3일 먼저
     for staff in originList:
         count = 0
-        limit = staff.possible_N_days
+        limit = 3
+        #limit = staff.possible_N_days
         possible = Possible_schedule.objects.filter(staff_id=staff)
-        print(possible)
-        print(limit)
+       # print(possible)
 
         for day in dayList:
-            temp = 0 # 그 날에 scheduling이 되었는가
+            day_success = 0 # 그 날에 scheduling이 되었는가
+
             if count >= limit:
+                staff.min_complete = True
+                staff.save()
                 break
+                
             for time in timeList:
-                if temp != 0:
+                if day_success != 0:
                     break
                 temp2 = Day.objects.get(day=day, time=time) #### day model
                 if temp2.needs - temp2.needs_newcomer <= temp2.real_origin: # 충분한 자리가 있는가?
-                    break
+                    continue # 다음 시간대로 넘김, 요일은 그대로라서 continue
                 for pos in possible:
                     if pos.day_id == temp2:
                         # day에 자리가 있으면 추가
                         createRealSchedule(staff.id, temp2.id)
                         print(pos)
-                        temp = 1
+                        day_success = 1
                         count = count + 1
                         temp2.real_origin = temp2.real_origin + 1
                         temp2.save
                         break
 
-    # 신규 스태프 스케쥴링
+        if staff.min_complete == False :
+            origin_minFailList.append(staff)
+
+    print(origin_minFailList)
+
+
+    # 신규 스태프 스케쥴링 - 3일 먼저
     for staff in newList:
         count = 0
-        limit = staff.possible_N_days
+        limit = 3
+        #limit = staff.possible_N_days
         possible = Possible_schedule.objects.filter(staff_id=staff)
-        print(possible)
-        print(limit)
+        #print(possible)
 
         for day in dayList:
-            temp = 0  # 그 날에 scheduling이 되었는가
+            day_success = 0  # 그 날에 scheduling이 되었는가
             if count >= limit:
+                staff.min_complete = True
+                staff.save()
                 break
             for time in timeList:
-                if temp != 0:
+                if day_success != 0:
                     break
                 temp2 = Day.objects.get(day=day, time=time)  #### day model
                 if temp2.needs_newcomer <= temp2.real_newcomer: # 충분한 자리가 있는가?
-                    break
+                    continue
                 for pos in possible:
                     if pos.day_id == temp2:
                         createRealSchedule(staff.id, temp2.id)
                         print(pos)
-                        temp = 1
+                        day_success = 1
                         count = count + 1
                         temp2.real_newcomer = temp2.real_newcomer + 1
                         temp2.save
                         break
 
-    return True
+        if staff.min_complete == False:
+            new_minFailList.append(staff)
+
+
+#추가필요부분
+# 3일분 먼저 처리 init + modify / 4일 희망자 처리 / 5일 희망자 처리
+# 스키마변경 - > 실제스케줄 반영 후 다시 남는 가능한 시간대만 따로 정리된 모델 추가
+# 스케줄링 실패 미소지기 목록 모델 추가
 # Real_schedule 추가
+
+    return True
+
+
 def createRealSchedule(staff, day):  # Staff의 id, Day의 id
     print("Real Schedule 생성 ...")
     stf = Staff.objects.get(pk=staff)
@@ -405,3 +464,8 @@ instance 뽑아내는 예제
             staffPossibleDay = instance.possible_N_days
         context = {'staffAll' : staffAll}
 '''
+
+def manageRealView(request):
+    context = {}
+
+    return render(request, 'plan/manager_realSchedules.html', context)

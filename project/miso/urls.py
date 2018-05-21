@@ -26,7 +26,7 @@ urlpatterns = [
     path('manager/hr/', manageNeedsView, name='manager-hr'),
     path('manager/hr/update/<str:day>/', manageNeedsUpdate, name='manager-hr-update'),
     #실제스케줄 관리 페이지
-    path('manager/real/', manageStaffView, name='manager-real'),
+    path('manager/real/', manageRealView, name='manager-real'),
 
     #스케줄링 실행 페이지
     path('manager/planning', runScheduleView, name='manager-staff'),
