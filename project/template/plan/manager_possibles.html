@@ -30,10 +30,6 @@
       background-color: #dddddd;
   }
 
-  .form-group input {
-    width: 50%;
-  }
-
   #button_margin_inquire_nameButton {
     margin-left: 70px;
     margin-right: 50px;
@@ -46,7 +42,19 @@
   #button_margin_inquire_dayTimeButton {
     margin-right: 50px;
   }
+
   </style>
+  <script type="text/javascript">
+        function openPopup(){
+        var delConfirm = confirm('스케줄을 제출하시겠습니까?');
+        if (delConfirm) {
+        }
+        else {
+        alert('제출이 취소되었습니다.');
+        }
+        return delConfirm;
+        }
+  </script>
 
 </head>
 <body>
@@ -85,29 +93,12 @@
           <li><a href="/manager/real">실제 스케줄</a></li>
         </ul>
        	<ul class="sidebar-nav">
-          <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Make Schedules</button>
+          <form onSubmit="return openPopup()" method="post">
+            <button type="submit" class="btn btn-success btn-lg" >Make Schedules</button>
+          </form>
        	</ul>
       </div>
       <!-- /사이드바 -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialong" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-                <h5 class="modal-title">확인 절차</h5>
-              </div>
-              <div class="modal-body">
-                <p>스케줄 생성을 계속 진행하시겠습니까?</p>
-              </div>
-              <div class="modal-footer">
-                <form action="/manager/planning">
-                    <button type="submit" class="btn btn-primary">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
 
       <!-- 본문 -->
       <div id="page-content-wrapper">
@@ -115,7 +106,7 @@
           <h1>등록된 가능 스케줄 현황</h1>
           <p>미소지기들이 등록한 스케줄 현황</p>
 
-           <table class="table table-bordered table-hover">
+          <table class="table table-bordered table-hover">
           <thead>
           <tr>
             <th>미소지기 이름</th>
@@ -149,37 +140,19 @@
             {% endfor %}
           </tbody>
         </table>
-            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="button" data-toggle="modal" data-target="#nameModal">이름으로 조회</button>
-            <div class="modal fade" id="nameModal" tabindex="-1" role="dialong" aria-labelledby="myModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h5 class="modal-title">확인 절차</h5>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group">
-                     <form action="/manager/staff_inquire_name/" method="post">
-                        <label for="inquireName">조회 할 이름</label>
-                        <input type="text" class="form-control" id="inquireName" placeholder="조회할 미소지기의 이름을 입력하세요.">
-                         <br>
-                        <button type="submit" class="btn btn-primary">OK</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                    </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="button">요일로 조회</button>
-            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="button">요일과 시간으로 조회</button>
+          <br>
+          <form>
+            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="submit">이름으로 조회</button>
+            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="submit">요일로 조회</button>
+            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="submit">요일과 시간으로 조회</button>
+          </form>
         </div>
       </div>
       <!-- /본문 -->
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>

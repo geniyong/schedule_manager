@@ -18,6 +18,8 @@ class Staff (models.Model):
     score = models.FloatField(blank=True, default=50)
     possible_N_days = models.IntegerField(blank=True, default=3)
     newcomer = models.BooleanField(blank=True, default=False)
+    min_complete = models.BooleanField (blank=True, default=False)
+    max_complete = models.BooleanField (blank=True, default=False)
 
     class Meta:
         unique_together = ('name', 'phone')
@@ -69,6 +71,17 @@ class Real_schedule (models.Model):
 class Possible_schedule(models.Model):
     staff_id = models.ForeignKey(Staff, on_delete= models.CASCADE)
     day_id = models.ForeignKey(Day, on_delete= models.CASCADE)
+
+    class Meta:
+        unique_together = ('staff_id', 'day_id')
+
+    def __str__(self):
+        return str(self.staff_id) + ':' + str(self.day_id)
+
+
+class Still_possible_schedule(models.Model):
+    staff_id = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    day_id = models.ForeignKey(Day, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('staff_id', 'day_id')
