@@ -25,7 +25,9 @@ SECRET_KEY = 't69@@t*hu$qgmy__c@iy0m(97))cne@3=5zj05xp-s=8(r0g7m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+"monkey0201.iptime.org",
+]
 
 
 # Application definition
@@ -38,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'miso',
-    'django_tables2',
     
 ]
 
