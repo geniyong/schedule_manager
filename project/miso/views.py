@@ -10,6 +10,7 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
+
     # ===============================================================
     # ===============================================================
 
@@ -17,12 +18,10 @@ def runSchedule():
     originList = []
     newList = []
     dayList = ['일요일', '금요일', '토요일', '월요일', '화요일', '수요일', '목요일']
-    timeList = ['D', 'N', 'N1','D1','N2','D2', 'M', 'M1', 'M2', 'M3', 'M4']
-
+    timeList = ['D','N','D1','M','M1']
     origin_minFailList = [] # 기존미소지기 중 최소근무일수 미충족 리스트
     new_minFailList =[] # 신입미소지기 중 최소근무일수 미충족 리스트
-
-
+    
     # ===============================================================
     # <Phase1>
     # 실제 스케줄링 시작 전 Pre-Process
@@ -33,19 +32,16 @@ def runSchedule():
     #   ( 모든 미소지기가 최소 3일은 근무 해야 할 때, 3일도 못채웠을 경우 False, 3일 이상 배치되었다면 True )
     #   // max_complete : 희망 근무일을 만족시켰는가?
     #   ( 미소지기가 제출한 희망 근무일수가 5일 일 때, 5일 배치 되었을 경우 True, 4일 이하 일 경우 False )
-    # 4. 가능 스케쥴의 is_assigned 초기화
     # ===============================================================
 
     # 1. 실제 스케줄 데이터 초기화
     Real_schedule.objects.all().delete()
     print(Real_schedule.objects.all())
-
     # 2. 요일/날짜 마다 실제 배치 인원 초기화
-    # day의 real_origin과 real_newcomer 초기화
+      # day의 real_origin과 real_newcomer 초기화
     for day in Day.objects.all():
         day.real_newcomer = 0
         day.real_origin = 0
-        day.modifiable_origin = True
         day.save()
 
     # 3. 모든 미소지기의 complete Boolean Set : 실제 스케줄 배치가 완료되었는가에 관한 Data 초기화
@@ -54,11 +50,6 @@ def runSchedule():
         staff.min_complete = False
         staff.max_complete = False
         staff.save()
-
-    # 4. Possible_schedule의 is_assigned 초기화
-    for schedule in Possible_schedule.objects.all():
-        schedule.is_assigned = False
-        schedule.save()
 
 
     # ===============================================================
@@ -81,11 +72,18 @@ def runSchedule():
     for staff in originList:
         count = 0
         limit = 3
+        #limit = staff.possible_N_days
         possible = Possible_schedule.objects.filter(staff_id=staff)
+       # print(possible)
 
         for day in dayList:
             day_success = 0 # 그 날에 scheduling이 되었는가
 
+            if count >= limit:
+                staff.min_complete = True
+                staff.save()
+                break
+                
             for time in timeList:
                 if day_success != 0:
                     break
@@ -95,16 +93,13 @@ def runSchedule():
                 for pos in possible:
                     if pos.day_id == temp2:
                         # day에 자리가 있으면 추가
-                        createRealSchedule(pos.id)
+                        createRealSchedule(staff.id, temp2.id)
+                        print(pos)
                         day_success = 1
                         count = count + 1
-
+                        temp2.real_origin = temp2.real_origin + 1
+                        temp2.save
                         break
-
-            if count >= limit:
-                staff.min_complete = True
-                staff.save()
-                break
 
         if staff.min_complete == False :
             origin_minFailList.append(staff)
@@ -116,11 +111,16 @@ def runSchedule():
     for staff in newList:
         count = 0
         limit = 3
+        #limit = staff.possible_N_days
         possible = Possible_schedule.objects.filter(staff_id=staff)
+        #print(possible)
 
         for day in dayList:
             day_success = 0  # 그 날에 scheduling이 되었는가
-
+            if count >= limit:
+                staff.min_complete = True
+                staff.save()
+                break
             for time in timeList:
                 if day_success != 0:
                     break
@@ -129,196 +129,27 @@ def runSchedule():
                     continue
                 for pos in possible:
                     if pos.day_id == temp2:
-                        createRealSchedule(pos.id)
+                        createRealSchedule(staff.id, temp2.id)
+                        print(pos)
                         day_success = 1
                         count = count + 1
-
+                        temp2.real_newcomer = temp2.real_newcomer + 1
+                        temp2.save
                         break
-
-            if count >= limit:
-                staff.min_complete = True
-                staff.save()
-                break
 
         if staff.min_complete == False:
             new_minFailList.append(staff)
 
 
-    # Modify
-    # minFailList에서 3일 배정
-    for staff in origin_minFailList:
-        modifyFailStaff(staff)
-
-    for staff in new_minFailList :
-        modifyFailStaff(staff)
-
-
-    #추가필요부분
-    # 3일분 먼저 처리 init + modify / 4일 희망자 처리 / 5일 희망자 처리
-    # 스키마변경 - > 실제스케줄 반영 후 다시 남는 가능한 시간대만 따로 정리된 모델 추가
-    # 스케줄링 실패 미소지기 목록 모델 추가
-    # Real_schedule 추가
+#추가필요부분
+# 3일분 먼저 처리 init + modify / 4일 희망자 처리 / 5일 희망자 처리
+# 스키마변경 - > 실제스케줄 반영 후 다시 남는 가능한 시간대만 따로 정리된 모델 추가
+# 스케줄링 실패 미소지기 목록 모델 추가
+# Real_schedule 추가
 
     return True
 
-def modifyFailStaff(staff):
-    dayList2 = ['토요일', '일요일', '금요일', '월요일', '화요일', '수요일', '목요일']
-    timeList2 = ['D', 'N', 'N1', 'D1', 'N2', 'D2', 'M', 'M1', 'M2', 'M3', 'M4'].reverse()
 
-    count = Real_schedule.objects.filter(staff_id=staff).count() # 현재까지 배치된 실제스케줄 수
-
-    possible = Possible_schedule.objects.filter(staff_id=staff, is_assigned=False)
-    for day in dayList2:
-        for time in timeList2:
-            # temp2 는 dayList2 와 timeList2를 활용하여 재정렬한 결과임
-            # EX) ['토요일':'M1','토요일':'M' ..... '목요일':'N', '목요일':'D']
-            temp2 = Day.objects.get(day=day, time=time)  #### day model
-            for pos in possible:
-                if count >= 3: # 3일 planning module 이기 때문에 limit = 3 
-                    # 실제 스케줄이 3일 이상이면 함수종료
-                    return count
-                
-                if pos.day_id == temp2:    
-                    # 강제 변경해야 될 시간대에 실제로 배치된 스케줄들을 뽑아옴
-                    #  (이 instance 안에 배치된 미소지기 정보가 있음)
-                    candidateRealscheudles = Real_schedule.objects.filter(day_id=temp2).reverse()
-
-                    if staff.newcomer:
-                        # 실제로 배치된 스케줄들에서 for 문 반복하며 개별 staff를 뽑음
-                        for candidateReal in candidateRealscheudles:
-
-                            # candidateStaff 는 실제 스케줄에 배치 된 개별 미소지기
-                            candidateStaff = candidateReal.staff_id
-                            if candidateStaff.newcomer :
-                                # 실패한 미소지기가 강제로 들어가야 될 스케줄에서
-                                # 후보 미소지기를 다른 시간대로 옮기는 작업 : modifyCandidates()
-                                if modifyCandidates(candidateStaff) : # 다른 시간대로 옮기기에 성공했다면
-
-                                    # 다른시간대로 옮겨진 미소지기의 실제 스케줄 삭제
-                                    updateRealSchedule(candidateReal.id,pos.id)
-                                    count += 1
-                                    break
-
-                    else :
-                        for candidateReal in candidateRealscheudles:
-                            # candidateStaff 는 실제 스케줄에 배치 된 개별 미소지기
-                            candidateStaff = candidateReal.staff_id
-                            if candidateStaff.newcomer == False :
-                                # 실패한 미소지기가 강제로 들어가야 될 스케줄에서
-                                # 후보 미소지기를 다른 시간대로 옮기는 작업 : modifyCandidates()
-                                if modifyCandidates(candidateStaff) : # 다른 시간대로 옮기기에 성공했다면
-                                    updateRealSchedule(candidateReal.id, pos.id)
-                                    count += 1
-                                    break
-    return count
-
-def modifyCandidates(candidateStaff):
-    candidatePossibles = Possible_schedule.objects.filter(staff_id=candidateStaff,
-                                                          is_assigned=False)
-
-    if candidateStaff.newcomer :
-        for candidatePos in candidatePossibles:
-            candidateDay = candidatePos.day_id
-            if candidateDay.needs_newcomer > candidateDay.real_newcomer:
-                createRealSchedule(candidatePos.id)
-                return True
-
-    else :
-        for candidatePos in candidatePossibles:
-            candidateDay = candidatePos.day_id
-            if candidateDay.needs - candidateDay.needs_newcomer > candidateDay.real_origin:
-                createRealSchedule(candidatePos.id)
-                return True
-
-    return False
-
-
-    
-
-'''
-# 실행하는 경우 :  Real_schedule이 삭제된 경우, Day.needs <= Day.real_origin이 되는 경우
-# Modifiable을 체크하고 결과를 반환한다.
-def checkModifiableOrigin(da): # Day의 id
-    day = Day.objects.get(pk=da)
-    # 1. day의 Staff가 부족한 경우 : True
-    if day.real_origin > day.needs:
-        day.modifiable_origin = True
-        day.save()
-        return True
-
-    # 2. day의 Staff가 충분한 경우 :
-    # 배정된 Staff중 하나라고 다른 Day에 Schedule을 가질 수 있는 경우 True
-    # 아닌 경우 False
-
-    # day의 Staff들
-    staff = []
-    for real in Real_schedule.objects.filter(day_id=da):
-        staff.append(real.staff_id)
-
-    # 한명의 Staff라도 변경 가능하다면 Modifiable
-    for stf in Staff:
-        # Staff의 가능 스케쥴의 Day들
-        days = Possible_schedule.objects.filter(staff_id=stf, is_assigned=False).day_id
-
-        for day2 in days:
-            if day2.modifiable_origin:
-                day.modifiable_origin = True
-                day.save()
-                return True
-
-    day.modifiable_origin = False
-    day.save()
-    return False
-'''
-
-
-def createRealSchedule(possible):  # Possible_schedule의 id
-    print("Real Schedule 생성 ...")
-
-    pos = Possible_schedule.objects.get(pk=possible)
-    stf = pos.staff_id
-    da = pos.day_id
-    print(pos)
-
-    # Possible_schedule 동기화
-    pos.is_assigned = True
-    pos.save()
-
-    # Day 동기화
-    if stf.newcomer:
-        da.real_newcomer = da.real_newcomer + 1
-    else:
-        da.real_origin = da.real_origin + 1
-    da.save()
-
-    # Real_schedule 생성
-    rs = Real_schedule(staff_id=stf, day_id=da)
-    rs.save()
-    return
-
-
-def updateRealSchedule(real_id, pos_id): # Real_schedule의 id, Possible_schedule의 id
-    real = Real_schedule.objects.get(pk=real_id)
-    staff = real.staff_id
-    day = real.day_id
-    pos = Possible_schedule.objects.get(staff_id=staff, day_id=day)
-    new_pos = Possible_schedule.objects.get(pk=pos_id)
-
-    # Possible_schedule 동기화
-    pos.is_assigned = False
-    pos.save()
-    new_pos.is_assigned = True
-    new_pos.save()
-
-    # 결과적으로 Day 변화 없음
-
-    # Real_schedule 수정
-    real.staff_id = new_pos.staff_id
-    real.day_id = new_pos.day_id
-    real.save()
-    return
-
-'''
 def createRealSchedule(staff, day):  # Staff의 id, Day의 id
     print("Real Schedule 생성 ...")
     stf = Staff.objects.get(pk=staff)
@@ -327,8 +158,6 @@ def createRealSchedule(staff, day):  # Staff의 id, Day의 id
     rs.save()
 
     return
-'''
-
 '''
 def runSchedule():
     originList = []
@@ -436,12 +265,6 @@ def possibleCreateRetrieveView(request):
 
 
 def loginView(request):
-   # dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
-   # timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
-   # for day in dayList:
-    #    for time in timeList:
-   #         Day(day=day, time=time).save()
-
     if request.method == 'POST':
         post = request.POST
         staffName=post.get('name')
@@ -483,7 +306,7 @@ def staffView(request, staffName, staffPhone):
     dayList = ['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
     context = {"staffName" : staffName, "staffPhone" : staffPhone, "dayList" : dayList}
     print("==========")
-    timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
+    timeList = ['D','D1','M','M1','N']
     possibleDays=[]
     bolt=0
     weekendCount = 0
@@ -586,7 +409,7 @@ def manageNeedsView(request):
 
 
 def manageNeedsUpdate(request, day):
-    timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
+    timeList=['D','D1','M','M1','N']
     dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
     if request.method =="GET":
         dayAll = Day.objects.all()

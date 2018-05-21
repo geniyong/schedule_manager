@@ -46,11 +46,12 @@
   </style>
   <script type="text/javascript">
         function openPopup(){
-        var delConfirm = confirm('스케줄을 제출하시겠습니까?');
+        var delConfirm = confirm('스케줄링을 진행하시겠습니까? 기존 스케줄 내역은 사라집니다!');
         if (delConfirm) {
+            window.location.href = '/manager/planning';
         }
         else {
-        alert('제출이 취소되었습니다.');
+        alert('스케줄링이 취소되었습니다.');
         }
         return delConfirm;
         }
@@ -93,9 +94,7 @@
           <li><a href="/manager/real">실제 스케줄</a></li>
         </ul>
        	<ul class="sidebar-nav">
-          <form onSubmit="return openPopup()" method="post">
-            <button type="submit" class="btn btn-success btn-lg" >Make Schedules</button>
-          </form>
+            <button type="button" class="btn btn-success btn-lg" onclick="openPopup();" >Make Schedules</button>
        	</ul>
       </div>
       <!-- /사이드바 -->
