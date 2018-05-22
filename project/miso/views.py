@@ -558,9 +558,9 @@ def staffView(request, staffName, staffPhone):
 
 def manageStaffView(request):
     staffAll = Staff.objects.all().order_by('name')
-
+    context = {'staffAll': staffAll, }
     if request.method=="GET":
-        context = {'staffAll':staffAll,}
+        print("getgetget")
 
     elif request.method == 'POST':
         post = request.POST
@@ -569,15 +569,16 @@ def manageStaffView(request):
         for staff in staffAll:
             postedList=post.getlist(str(staff))
             print(postedList)
-            if(postedList[0] != ''): # score 평가점수 수정
-                staff.score=postedList[0]
+            if len(postedList) != 0 :
+                if(postedList[0] != ''): # score 평가점수 수정
+                    staff.score=postedList[0]
 
-            if(len(postedList) == 2) : # newcomer 신입여부 수정
-                staff.newcomer = True
-            else:
-                staff.newcomer = False
+                if(len(postedList) == 2) : # newcomer 신입여부 수정
+                    staff.newcomer = True
+                else:
+                    staff.newcomer = False
 
-            staff.save()
+                staff.save()
 
         return redirect('./')
 
