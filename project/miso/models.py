@@ -78,6 +78,7 @@ class Possible_schedule(models.Model):
     staff_id = models.ForeignKey(Staff, on_delete= models.CASCADE)
     day_id = models.ForeignKey(Day, on_delete= models.CASCADE)
     is_assigned = models.BooleanField(blank=True, default=False)
+    day_assigned = models.BooleanField(blank=True, default=False)
 
     class Meta:
         unique_together = ('staff_id', 'day_id')

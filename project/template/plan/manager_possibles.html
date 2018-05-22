@@ -43,6 +43,31 @@
     margin-right: 50px;
   }
 
+
+.namanyay-search-btn {
+background:#0099ff;
+color:white;
+font: 'trebuchet ms', trebuchet;
+padding:10px 20px;
+border-radius:0 5px 5px 0;
+-moz-border-radius:0 5px 5px 0;
+-webkit-border-radius:0 5px 5px 0;
+-o-border-radius:0 5px 5px 0;
+border:0 none;
+font-weight:bold;
+}
+
+.namanyay-search-box {
+background: #eee;
+padding:10px;
+ border-radius:5px 0 0 5px;
+-moz-border-radius:5px 0 0 5px;
+-webkit-border-radius:5px 0 0 5px;
+-o-border-radius:5px 0 0 5px;
+border:0 none;
+width:200px;
+ }
+
   </style>
   <script type="text/javascript">
         function openPopup(){
@@ -104,6 +129,12 @@
         <div class="container-fluid">
           <h1>등록된 가능 스케줄 현황</h1>
           <p>미소지기들이 등록한 스케줄 현황</p>
+          <form id="searchthis" action="/manager/possible/search" method="get">
+              <input class="namanyay-search-box" name="name" size="30" type="text" placeholder="이름으로 검색 예) 홍길동"/>
+              <input class="namanyay-search-box" name="day" size="30" type="text" placeholder="요일로 검색 예) 월요일"/>
+              <input class="namanyay-search-box" name="time" size="30" type="text" placeholder="시간으로 검색 예) M1"/>
+              <input class="namanyay-search-btn" value="검색" type="submit"/>
+          </form>
 
           <table class="table table-bordered table-hover">
           <thead>
@@ -140,11 +171,6 @@
           </tbody>
         </table>
           <br>
-          <form>
-            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="submit">이름으로 조회</button>
-            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="submit">요일로 조회</button>
-            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="submit">요일과 시간으로 조회</button>
-          </form>
         </div>
       </div>
       <!-- /본문 -->

@@ -43,56 +43,65 @@
     margin-right: 50px;
   }
 
+
+.namanyay-search-btn {
+background:#0099ff;
+color:white;
+font: 'trebuchet ms', trebuchet;
+padding:10px 20px;
+border-radius:0 5px 5px 0;
+-moz-border-radius:0 5px 5px 0;
+-webkit-border-radius:0 5px 5px 0;
+-o-border-radius:0 5px 5px 0;
+border:0 none;
+font-weight:bold;
+}
+
+.namanyay-search-box {
+background: #eee;
+padding:10px;
+ border-radius:5px 0 0 5px;
+-moz-border-radius:5px 0 0 5px;
+-webkit-border-radius:5px 0 0 5px;
+-o-border-radius:5px 0 0 5px;
+border:0 none;
+width:200px;
+ }
+
   </style>
+  <script type="text/javascript">
+        function openPopup(){
+        var delConfirm = confirm('스케줄링을 진행하시겠습니까? 기존 스케줄 내역은 사라집니다!');
+        if (delConfirm) {
+            window.location.href = '/manager/planning';
+        }
+        else {
+        alert('스케줄링이 취소되었습니다.');
+        }
+        return delConfirm;
+        }
+  </script>
+
 </head>
 <body>
     <nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-		<span class="sr-only">Toggle navigation</span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-	      </button>
 	      <a class="navbar-brand" href="/manager/">Schedule Manager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
-	      <ul class="nav navbar-nav">
-		<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-		<li><a href="#">Link</a></li>
-		<li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-		  <ul class="dropdown-menu" role="menu">
-		    <li><a href="#">Action</a></li>
-		    <li><a href="#">Another action</a></li>
-		    <li><a href="#">Something else here</a></li>
-		    <li class="divider"></li>
-		    <li><a href="#">Separated link</a></li>
-		    <li class="divider"></li>
-		    <li><a href="#">One more separated link</a></li>
-		  </ul>
-		</li>
-	      </ul>
-	      <form class="navbar-form navbar-left" role="search">
-		<div class="form-group">
-		  <input type="text" class="form-control" placeholder="Search">
-		</div>
-		<button type="submit" class="btn btn-default">Submit</button>
-	      </form>
 	      <ul class="nav navbar-nav navbar-right">
 		<li><a href="#">Link</a></li>
 		<li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
 		  <ul class="dropdown-menu" role="menu">
-		    <li><a href="#">Action</a></li>
-		    <li><a href="#">Another action</a></li>
-		    <li><a href="#">Something else here</a></li>
-		    <li class="divider"></li>
-		    <li><a href="#">Separated link</a></li>
+		    <li><a href="#">naver</a></li>
+		    <li><a href="#">hanmail</a></li>
+		    <li><a href="#">google</a></li>
+		    <li><a href="#">yahoo</a></li>
 		  </ul>
 		</li>
 	      </ul>
@@ -108,37 +117,24 @@
           <li><a href="/manager/possible">가능 스케줄</a></li>
           <li><a href="/manager/hr">필요 인력</a></li>
           <li><a href="/manager/real">실제 스케줄</a></li>
-          <li><a href="#">스케줄러</a></li>
         </ul>
-       	<ul class="sidebar-nav btn-padding-30">
-          <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Make Schedules</button>
+       	<ul class="sidebar-nav">
+            <button type="button" class="btn btn-success btn-lg" onclick="openPopup();" >Make Schedules</button>
        	</ul>
       </div>
       <!-- /사이드바 -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <p>Modal body text goes here.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-            </div>
-        </div>
+
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
           <h1>등록된 가능 스케줄 현황</h1>
           <p>미소지기들이 등록한 스케줄 현황</p>
+          <form id="searchthis" action="/manager/possible/search" method="get">
+              <input class="namanyay-search-box" name="name" size="30" type="text" placeholder="이름으로 검색 예) 홍길동"/>
+              <input class="namanyay-search-box" name="day" size="30" type="text" placeholder="요일로 검색 예) 월요일"/>
+              <input class="namanyay-search-box" name="time" size="30" type="text" placeholder="시간으로 검색 예) M1"/>
+              <input class="namanyay-search-btn" value="검색" type="submit"/>
+          </form>
 
           <table class="table table-bordered table-hover">
           <thead>
@@ -175,11 +171,6 @@
           </tbody>
         </table>
           <br>
-          <form>
-            <button id="button_margin_inquire_nameButton" class="btn btn-default" type="submit">이름으로 조회</button>
-            <button id="button_margin_inquire_dayButton" class="btn btn-default" type="submit">요일로 조회</button>
-            <button id="button_margin_inquire_dayTimeButton" class="btn btn-default" type="submit">요일과 시간으로 조회</button>
-          </form>
         </div>
       </div>
       <!-- /본문 -->

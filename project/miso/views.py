@@ -46,7 +46,6 @@ def runSchedule():
     for day in Day.objects.all():
         day.real_newcomer = 0
         day.real_origin = 0
-        day.modifiable_origin = True
         day.save()
 
     # 3. 모든 미소지기의 complete Boolean Set : 실제 스케줄 배치가 완료되었는가에 관한 Data 초기화
@@ -642,7 +641,7 @@ def manageNeedsUpdate(request, day):
     return render(request, 'plan/manager_needs_update.html',context)
 
 
-# 가능스케줄 페이지 임시 뷰
+# 가능스케줄 페이지 뷰
 def possibleSchedulesView(request):
     dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
     if request.method=="GET":
@@ -650,6 +649,28 @@ def possibleSchedulesView(request):
         possibleAll = Possible_schedule.objects.all().order_by('day_id')
         context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
     return render(request, 'plan/manager_possibles.html', context)
+
+# 가능스케줄 검색 뷰
+def possibleSearchView(request):
+    dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
+    if request.method=="GET":
+        staffAll = Staff.objects.all().order_by('name')
+        possibleAll = Possible_schedule.objects.all().order_by('day_id')
+        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
+
+        name = request.GET.get('name', '')
+        day = request.GET.get('day', '')
+        time = request.GET.get('time', '')
+        print("====================SearchView====================")
+        print("get.name : ", end="")
+        print(name)
+        print("get.day : ", end="")
+        print(day)
+        print("get.time : ", end="")
+        print(time)
+
+
+    return render(request, 'plan/manager_possibles_search.html', context)
 
 
 # 매니저-실제스케줄조회뷰

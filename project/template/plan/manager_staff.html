@@ -80,10 +80,12 @@
       <!-- /사이드바 -->
 
       <!-- 본문 -->
+        <form id="scoreupdate" method="post">
       <div id="page-content-wrapper">
         <div class="container-fluid">
           <h1>미소지기 관리</h1>
           <p>평가점수 조회</p>
+            <button class="btn btn-default" type="submit">평가하기</button>
           <table class="table table-bordered table-hover">
           <thead>
           <tr>
@@ -97,7 +99,7 @@
           </tr>
           </thead>
           <tbody>
-          <a id="scoreupdate" method="post">
+
            {% csrf_token %}
             {% for staff in staffAll %}
             {% with staff.name|add:":"|add:staff.phone as name%}

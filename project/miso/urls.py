@@ -19,7 +19,7 @@ urlpatterns = [
 
     #가능한스케줄 관리 페이지
     path('manager/possible/', possibleSchedulesView, name='manager-possible'),
-    path('manager/possible/<str:staffName>/', manageStaffView, name='manager-possible'), # 이름으로찾기
+    path('manager/possible/search/', possibleSearchView, name='manager-possible-search'), # 이름으로찾기
     path('manager/possible/<str:possibleDay>/', manageStaffView, name='manager-possible'), # 요일로 찾기
     path('manager/possible/<str:possibleDay>/<str:possibleTime>', manageStaffView, name='manager-possible'),#요일+시간
 
