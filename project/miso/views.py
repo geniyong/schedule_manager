@@ -662,13 +662,13 @@ def manageRealView(request):
     return render(request, 'plan/manager_realSchedules.html', context)
 
 
-def manageRealDayView(request):
+def manageRealDayView(request, day):
     dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
     timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
     realAll = Real_schedule.objects.all()
-    context = {'dayList':dayList, 'timeList':timeList,'realAll':realAll}
+    context = {'day':day,'dayList':dayList, 'timeList':timeList,'realAll':realAll}
 
-    return render(request, 'plan/manager_realSchedules.html', context)
+    return render(request, 'plan/manager_realSchedules_day.html', context)
 
 
 # 페이지 확인을 위한 임시 뷰

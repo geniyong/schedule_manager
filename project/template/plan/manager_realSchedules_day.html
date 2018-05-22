@@ -16,7 +16,6 @@
 table {
     border-collapse: collapse;
     margin:50px auto;
-    table-layout:fixed;
     }
 /* Zebra striping */
 tr:nth-of-type(odd) {
@@ -50,6 +49,10 @@ td:nth-of-type(1)
 {
     text-align: center;
 }
+/* form 태그 간 줄바꿈현상 해결 (줄안바꾸게 style) */
+  form {
+      display: inline;
+  }
 
   </style>
 </head>
@@ -100,23 +103,28 @@ td:nth-of-type(1)
         <div class="container-fluid">
           <h1>이번 시즌 스케줄</h1>
           <p>이번 시즌 스케줄 표</p>
-          <form action="/manager/real/월요일/">
-          <button class="btn btn-default" type="submit">요일별로 조회하기</button>
-          </form>
+            <table class="table table-condensed table-hover">
+                <tr>
+                  {% for days in dayList %}
+                  <form action="/manager/real/{{days}}/">
+                  <td align="center">
+                    <button class="btn btn-default btn-md" type="submit">{{days}}</button>
+                  </td>
+                  </form>
+                  {% endfor %}
+                </tr>
+                </table>
           <table class="table table-condensed table-hover">
           <thead>
           <tr>
                 <th>시간대</th>
-                {% for day in dayList %}
                 <th>{{ day }}</th>
-                {% endfor %}
           </tr>
           </thead>
           <tbody>
               {% for time in timeList %}
           <tr>
             <td>{{time}}</td>
-            {% for day in dayList %}
             <td>{% for real in realAll %}
             {% if real.day_id.day == day %}
             {% if real.day_id.time == time %}
@@ -125,7 +133,6 @@ td:nth-of-type(1)
             {% endif %}
             {% endfor %}
             </td>
-            {% endfor %}
           </tr>
             {% endfor %}
 
