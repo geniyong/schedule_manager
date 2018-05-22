@@ -282,6 +282,11 @@ def createRealSchedule(possible):  # Possible_schedule의 id
 
     # Possible_schedule 동기화
     pos.is_assigned = True
+    staffPossibles = Possible_schedule.objects.filter(staff_id=pos.staff_id)
+    for possible in staffPossibles:
+        if possible.day_id.day == pos.day_id.day:
+            possible.day_assigned = True
+            possible.save()
     pos.save()
 
     # Day 동기화
