@@ -310,10 +310,20 @@ def updateRealSchedule(real_id, pos_id): # Real_schedule의 id, Possible_schedul
     new_pos = Possible_schedule.objects.get(pk=pos_id)
 
     # Possible_schedule 동기화
+    staffPossibles = Possible_schedule.objects.filter(staff_id=pos.staff_id)
     pos.is_assigned = False
     pos.save()
+    for possible in staffPossibles:
+        if possible.day_id.day == pos.day_id.day:
+            possible.day_assigned = False
+            possible.save()
+
     new_pos.is_assigned = True
     new_pos.save()
+    for possible in staffPossibles:
+        if possible.day_id.day == new_pos.day_id.day:
+            possible.day_assigned = True
+            possible.save()
 
     # 결과적으로 Day 변화 없음
 
