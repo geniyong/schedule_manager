@@ -34,7 +34,7 @@ def runSchedule():
     #   ( 모든 미소지기가 최소 3일은 근무 해야 할 때, 3일도 못채웠을 경우 False, 3일 이상 배치되었다면 True )
     #   // max_complete : 희망 근무일을 만족시켰는가?
     #   ( 미소지기가 제출한 희망 근무일수가 5일 일 때, 5일 배치 되었을 경우 True, 4일 이하 일 경우 False )
-    # 4. 가능 스케쥴의 is_assigned 초기화
+    # 4. 가능 스케쥴의 is_assigned / day_assigned 초기화
     # ===============================================================
 
     # 1. 실제 스케줄 데이터 초기화
@@ -55,14 +55,16 @@ def runSchedule():
         staff.max_complete = False
         staff.save()
 
-    # 4. Possible_schedule의 is_assigned 초기화
+    # 4. Possible_schedule의 is_assigned / day_assigned 초기화
     for schedule in Possible_schedule.objects.all():
         schedule.is_assigned = False
+        schedule.day_assigned = False
         schedule.save()
 
 
     # ===============================================================
     # <Phase2>
+    # ## Initializer ##
     # 스케줄링
     # ===============================================================
 
@@ -144,20 +146,17 @@ def runSchedule():
             new_minFailList.append(staff)
 
 
-    # Modify
+    # ===============================================================
+    # <Phase3>
+    # ## Modifier ##
+    # 강제 수정
+    # ===============================================================
     # minFailList에서 3일 배정
     for staff in origin_minFailList:
         modifyFailStaff(staff)
 
     for staff in new_minFailList :
         modifyFailStaff(staff)
-
-
-    #추가필요부분
-    # 3일분 먼저 처리 init + modify / 4일 희망자 처리 / 5일 희망자 처리
-    # 스키마변경 - > 실제스케줄 반영 후 다시 남는 가능한 시간대만 따로 정리된 모델 추가
-    # 스케줄링 실패 미소지기 목록 모델 추가
-    # Real_schedule 추가
 
     return True
 
@@ -167,7 +166,8 @@ def modifyFailStaff(staff):
 
     count = Real_schedule.objects.filter(staff_id=staff).count() # 현재까지 배치된 실제스케줄 수
 
-    possible = Possible_schedule.objects.filter(staff_id=staff, is_assigned=False)
+    ####### day_assigned = False filtering ########## (fail 미소지기가 가능한 스케줄을 가져올때는 day_assigned 도 체크)
+    possible = Possible_schedule.objects.filter(staff_id=staff, is_assigned=False, day_assigned=False)
     for day in dayList2:
         for time in timeList2:
             # temp2 는 dayList2 와 timeList2를 활용하여 재정렬한 결과임
@@ -192,7 +192,7 @@ def modifyFailStaff(staff):
                             if candidateStaff.newcomer :
                                 # 실패한 미소지기가 강제로 들어가야 될 스케줄에서
                                 # 후보 미소지기를 다른 시간대로 옮기는 작업 : modifyCandidates()
-                                if modifyCandidates(candidateStaff) : # 다른 시간대로 옮기기에 성공했다면
+                                if modifyCandidates(candidateStaff, temp2) : # 다른 시간대로 옮기기에 성공했다면
 
                                     # 다른시간대로 옮겨진 미소지기의 실제 스케줄 삭제
                                     updateRealSchedule(candidateReal.id,pos.id)
@@ -212,10 +212,31 @@ def modifyFailStaff(staff):
                                     break
     return count
 
-def modifyCandidates(candidateStaff):
+def modifyCandidates(candidateStaff, real_day):
     candidatePossibles = Possible_schedule.objects.filter(staff_id=candidateStaff,
+                                                          is_assigned=False, day_assigned=False)
+
+    # candidate 는 지금 modify 하려는 날 먼저 possible 있는지 찾고 그뒤에는 day_assigned=False로 재필터링
+    candidate_today = Possible_schedule.objects.filter(staff_id=candidateStaff, day_id=real_day,
                                                           is_assigned=False)
 
+    # 지금 modify 하려는 real_day 먼저 possible 있는지 찾는 과정
+    if candidateStaff.newcomer :
+        for today_possible in candidate_today:
+            candidateDay = today_possible.day_id
+            if candidateDay.needs_newcomer > candidateDay.real_newcomer:
+                createRealSchedule(today_possible.id)
+                return True
+
+    else :
+        for today_possible in candidate_today:
+            candidateDay = today_possible.day_id
+            if candidateDay.needs - candidateDay.needs_newcomer > candidateDay.real_origin:
+                createRealSchedule(today_possible.id)
+                return True
+
+
+    # real_day에 candidatePos 중 가능한날이 없다면 다른 날들 에서는 day_assigned=False 조건 추가 후 진행
     if candidateStaff.newcomer :
         for candidatePos in candidatePossibles:
             candidateDay = candidatePos.day_id
