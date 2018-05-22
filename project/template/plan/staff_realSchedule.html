@@ -11,46 +11,13 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
-
-<style>
-    body{
-     width:960px;
-     margin:20px auto;
-     background:#ddd;
-     }
-
-     .container {
-     background:#fff url(bg.gif) repeat-y top left;
-     width:960px;
-     }
-
-    .content {
-     width:660px;
-     height:300px;
-     float:right;
-     }
-
-     .sidebar {
-     width:300px;
-     height:400px;
-     float:left;}
-
-     .header{
-     height:50px;
-     background:#ccc;
-     }
-
-     .clear {
-     clear:both;
-     }
-</style>
 </head>
 <body>
     <nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="/staff/">Schedule Manager</a>
+	      <a class="navbar-brand" href="/staff/{{staffName}}/{{staffPhone}}">Schedule Manager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -75,8 +42,8 @@
       <!-- 사이드바 -->
       <div id="sidebar-wrapper">
         <ul class="nav nav-pills nav-stacked navbar-collapse">
-          <li><a href="/manager/staff">근무 가능시간 등록</a></li>
-          <li><a href="/manager/possible">실제근무배정 확인</a></li>
+          <li><a href="/staff/{{staffName}}/{{staffPhone}}">근무 가능시간 등록</a></li>
+          <li><a href="/staff/{{staffName}}/{{staffPhone}}/real">실제근무배정 확인</a></li>
         </ul>
       </div>
         <!-- /사이드바 -->
@@ -88,18 +55,9 @@
           <p>실제 스케줄 조회</p>
 
           <form id="frm" method="post">
+              <br>
             {% csrf_token %}
-              <h4>희망근무일수 : </h4>
-              <select class="form-control" name="희망근무일수">
-                    <option value=0 selected>-- 근무 불가 --</option>
-                    <option value='1'>1일</option>
-                    <option value='2'>2일</option>
-                    <option value='3'>3일</option>
-                    <option value='4'>4일</option>
-                    <option value='5'>5일</option>
-                    <option value='6'>6일</option>
-                    <option value='7'>7일</option>
-              </select>
+              <h4>실제 주당 근무 일수 : {{day_num}}</h4>
 
             <table class="table table-bordered table-hover">
               <thead>
@@ -117,13 +75,14 @@
             <tbody>
             <tr>
                  <td>근무시간</td>
-                 <td>{{Mon_Time}}</td>
-                 <td>{{Tue_Time}}</td>
-                 <td>{{Wed_Time}}</td>
-                 <td>{{Thu_Time}}</td>
-                 <td>{{Fri_Time}}</td>
-                 <td>{{Sat_Time}}</td>
-                 <td>{{Sun_Time}}</td>
+                {% for day in dayList %}
+                <th>{% for real in realAll %}
+                 {% if day in real.day_id.day %}
+                {{ real.day_id.time }}
+                {% endif %}
+                {% endfor %}
+                </th>
+                 {% endfor %}
             </tr>
          </tbody>
         </table>

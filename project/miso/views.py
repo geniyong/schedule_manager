@@ -556,6 +556,16 @@ def staffView(request, staffName, staffPhone):
     return render(request, 'plan/staff_schedule_enrollment.html', context)
 
 
+def staffRealView(request, staffName, staffPhone):
+    dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    context = { 'staffName':staffName, 'staffPhone':staffPhone, 'dayList':dayList }
+    staff = Staff.objects.get(name=staffName, phone=staffPhone)
+    reals = Real_schedule.objects.filter(staff_id = staff)
+    context["day_num"] = reals.count()
+    context['realAll'] = reals
+
+    return render(request, 'plan/staff_realSchedule.html', context)
+
 def manageStaffView(request):
     staffAll = Staff.objects.all().order_by('name')
     context = {'staffAll': staffAll, }
@@ -631,9 +641,6 @@ def manageNeedsUpdate(request, day):
 
     return render(request, 'plan/manager_needs_update.html',context)
 
-# 페이지 확인을 위한 임시 뷰
-def indexTest(request):
-    return render(request, 'plan/index.html')
 
 # 가능스케줄 페이지 임시 뷰
 def possibleSchedulesView(request):
@@ -643,6 +650,30 @@ def possibleSchedulesView(request):
         possibleAll = Possible_schedule.objects.all().order_by('day_id')
         context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
     return render(request, 'plan/manager_possibles.html', context)
+
+
+# 매니저-실제스케줄조회뷰
+def manageRealView(request):
+    dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
+    realAll = Real_schedule.objects.all()
+    context = {'dayList':dayList, 'timeList':timeList,'realAll':realAll}
+
+    return render(request, 'plan/manager_realSchedules.html', context)
+
+
+def manageRealDayView(request):
+    dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
+    realAll = Real_schedule.objects.all()
+    context = {'dayList':dayList, 'timeList':timeList,'realAll':realAll}
+
+    return render(request, 'plan/manager_realSchedules.html', context)
+
+
+# 페이지 확인을 위한 임시 뷰
+def indexTest(request):
+    return render(request, 'plan/index.html')
 '''
 instance 뽑아내는 예제
     if request.method=="GET":
@@ -654,8 +685,3 @@ instance 뽑아내는 예제
             staffPossibleDay = instance.possible_N_days
         context = {'staffAll' : staffAll}
 '''
-
-def manageRealView(request):
-    context = {}
-
-    return render(request, 'plan/manager_realSchedules.html', context)

@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(r'^login/$', loginView, name='staff-create'),
     re_path(r'^manager/$', managerView, name='manager-main'),
     path('staff/<str:staffName>/<str:staffPhone>/', staffView, name='staff-main'),
+    path('staff/<str:staffName>/<str:staffPhone>/real', staffRealView, name='staff-main'),
 
     # 페이지 확인을 위한 임시 뷰
     path('index/',  indexTest),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('manager/hr/update/<str:day>/', manageNeedsUpdate, name='manager-hr-update'),
     #실제스케줄 관리 페이지
     path('manager/real/', manageRealView, name='manager-real'),
+    path('manager/real/<str:day>/', manageRealDayView, name='manager-real-day'),
 
     #스케줄링 실행 페이지
     path('manager/planning', runScheduleView, name='manager-staff'),
