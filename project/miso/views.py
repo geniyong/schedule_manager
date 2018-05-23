@@ -50,12 +50,15 @@ def runSchedule():
 
     # 3. 모든 미소지기의 complete Boolean Set : 실제 스케줄 배치가 완료되었는가에 관한 Data 초기화
       # Staff.min_complete , Staff.max_complete 초기화
+    
+    print("##### STAFF 초기화 중 ... ######")
     for staff in Staff.objects.all():
         staff.min_complete = False
         staff.max_complete = False
         staff.save()
 
     # 4. Possible_schedule의 is_assigned / day_assigned 초기화
+    print("##### 모든 가능스케줄들 초기화 중 ... ######")
     for schedule in Possible_schedule.objects.all():
         schedule.is_assigned = False
         schedule.day_assigned = False
@@ -69,6 +72,7 @@ def runSchedule():
     # ===============================================================
 
     # Staff 분리, ordering -> 점수 순서대로
+    print("##### 기존/신입 미소지기 분리 중 ... ######")
     qs = Staff.objects.all().order_by('-score')
     for staff in qs:
         if(staff.newcomer == True):
@@ -80,6 +84,7 @@ def runSchedule():
    # print(newList)
 
     # 기존 스태프 스케쥴링 - 3일 먼저
+    print("##### 기존 미소지기 3일 먼저 짜는 중 ... ######")
     for staff in originList:
         count = 0
         limit = 3
@@ -115,6 +120,7 @@ def runSchedule():
 
 
     # 신규 스태프 스케쥴링 - 3일 먼저
+    print("##### 신입 미소지기 3일 먼저 짜는 중 ... ######")
     for staff in newList:
         count = 0
         limit = 3
@@ -152,6 +158,7 @@ def runSchedule():
     # 강제 수정
     # ===============================================================
     # minFailList에서 3일 배정
+    print("##### 미소지기 3일 배정 강제 Modify 진행 중 ... ######")
     for staff in origin_minFailList:
         modifyFailStaff(staff)
 
