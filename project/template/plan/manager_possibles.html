@@ -135,43 +135,7 @@ width:200px;
               <input class="namanyay-search-box" name="time" size="30" type="text" placeholder="시간으로 검색 예) M1"/>
               <input class="namanyay-search-btn" value="검색" type="submit"/>
           </form>
-
           <table class="table table-bordered table-hover">
-          <thead>
-          <tr>
-            <th>미소지기 이름</th>
-            <th>월요일</th>
-            <th>화요일</th>
-            <th>수요일</th>
-            <th>목요일</th>
-            <th>금요일</th>
-            <th>토요일</th>
-            <th>일요일</th>
-          </tr>
-          </thead>
-          <tbody>
-            {% for staff in staffAll %}
-            {% with staff.name|add:":"|add:staff.phone as name%}
-          <tr>
-            <td>{{staff.name}}</td>
-
-            {% for day in dayList %}
-            <th>{% for possible in possibleAll %}
-            {% if possible.staff_id == staff %}
-            {% if day in possible.day_id.day %}
-              {{ possible.day_id.time }}
-            {% endif %}
-            {% endif %}
-            {% endfor %}
-            </th>
-            {% endfor %}
-          </tr>
-            {% endwith %}
-            {% endfor %}
-          </tbody>
-        </table>
-
-                  <table class="table table-bordered table-hover">
           <thead>
           <tr>
             <th>미소지기 이름</th>
@@ -188,7 +152,42 @@ width:200px;
             {% for cell in cellList %}
           <tr>
             <th>{{cell.name}}</th>
-            <th>{{cell.mon}}</th>
+
+            <th>
+                {% for time in cell.월요일 %}
+                    {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.화요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.수요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.목요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.금요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.토요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
+            <th>
+                {% for time in cell.일요일 %}
+                     {{time}}
+                {% endfor %}
+            </th>
           </tr>
             {% endfor %}
           </tbody>

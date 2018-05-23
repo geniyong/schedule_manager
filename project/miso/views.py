@@ -683,19 +683,19 @@ def possibleSchedulesView(request):
     if request.method=="GET":
         staffAll = Staff.objects.all().order_by('name')
         possibleAll = Possible_schedule.objects.all().order_by('day_id')
-        dayAll = Day.objects.all()
-
-        cellList = [{'name':"천재용", 'mon':"M M1 M2 M3"}]
-        dic = {}
+        cellList = []
 
         for staff in staffAll:
-            for day in dayList :
-               dayTimes = dayAll.filter(day=day)
+            staffDic = {'name': "", "월요일": [], "화요일": [], "수요일": [], "목요일": [], "금요일": [], "토요일": [], "일요일": []}
+            staffPossibles = possibleAll.filter(staff_id=staff)
+            staffDic['name'] = staff.name
 
-               if day.day == dayList
-               possibleAll.get(staff_id=staff, day_id=day)
+            for staffPossible in staffPossibles :
+                posDay = staffPossible.day_id.day    # 신청 가능스케줄의 요일
+                posTime = staffPossible.day_id.time   # 신청 가능스케줄의 시간대
+                staffDic[posDay].append(posTime)
 
-
+            cellList.append(staffDic)
 
         context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList, 'cellList':cellList}
     return render(request, 'plan/manager_possibles.html', context)
