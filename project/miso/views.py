@@ -683,7 +683,21 @@ def possibleSchedulesView(request):
     if request.method=="GET":
         staffAll = Staff.objects.all().order_by('name')
         possibleAll = Possible_schedule.objects.all().order_by('day_id')
-        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
+        dayAll = Day.objects.all()
+
+        cellList = [{'name':"천재용", 'mon':"M M1 M2 M3"}]
+        dic = {}
+
+        for staff in staffAll:
+            for day in dayList :
+               dayTimes = dayAll.filter(day=day)
+
+               if day.day == dayList
+               possibleAll.get(staff_id=staff, day_id=day)
+
+
+
+        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList, 'cellList':cellList}
     return render(request, 'plan/manager_possibles.html', context)
 
 # 가능스케줄 검색 뷰
