@@ -101,9 +101,8 @@ td:nth-of-type(1)
       <!-- 본문 -->
       <div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>이번 시즌 스케줄</h1>
-          <p>이번 시즌 스케줄 표</p>
-            <table class="table table-condensed table-hover">
+          <h1>{{day}} 스케줄</h1>
+        <table class="table table-condensed table-hover">
                 <tr>
                   {% for days in dayList %}
                   <form action="/manager/real/{{days}}/">
@@ -118,29 +117,29 @@ td:nth-of-type(1)
           <thead>
           <tr>
                 <th>시간대</th>
-                <th>{{ day }}</th>
+                <th>미소지기</th>
+                <th width="20%">총 필요 인원(기존/신입)</th>
+                <th width="20%">현재 배치 인원(기존/신입)</th>
           </tr>
           </thead>
           <tbody>
               {% for time in timeList %}
           <tr>
             <td>{{time}}</td>
-            <td>{% for real in realAll %}
-            {% if real.day_id.day == day %}
-            {% if real.day_id.time == time %}
-            {{real.staff_id.name}}
-            {% endif %}
-            {% endif %}
-            {% endfor %}
+            <td>
+                {% load index %}
+                {{ dayAll | filter_day:day | filter_time:time | filter_real:realAll | get_staff }}
+            </td>
+            <td>
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs}} 명
+            </td>
+              <td>
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs_new}} 명
             </td>
           </tr>
             {% endfor %}
-
-
           </tbody>
         </table>
-        <br>
-
         </div>
       </div>
       <!-- /본문 -->

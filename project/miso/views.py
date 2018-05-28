@@ -13,6 +13,99 @@ from django.http import HttpResponseRedirect
 
     # ===============================================================
     # ===============================================================
+def run_schedule_Ndays(n):
+    dayList = ['일요일', '금요일', '토요일', '월요일', '화요일', '수요일', '목요일']
+    timeList = ['D', 'N', 'N1', 'D1', 'N2', 'D2', 'M', 'M1', 'M2', 'M3', 'M4']
+    newList = []
+    originList = []
+    origin_minFailList=[]
+    new_minFailList=[]
+
+    qs = Staff.objects.filter(possible_N_days__gte = n).order_by('-score')
+    for staff in qs:
+        if (staff.newcomer == True):
+            newList.append(staff)
+
+        else:
+            originList.append(staff)
+
+    # 기존 스태프 스케쥴링 - N일
+    print("##### 기존 미소지기 %d 일 스케줄링######" % (n))
+    for staff in originList:
+        count = Real_schedule.objects.filter(staff_id=staff).count()
+        limit = n
+        possible = Possible_schedule.objects.filter(staff_id=staff, day_assigned=False)
+
+        for day in dayList:
+            day_success = 0 # 그 날에 scheduling이 되었는가
+
+            for time in timeList:
+                if day_success != 0:
+                    break
+                temp2 = Day.objects.get(day=day, time=time) #### day model
+                if temp2.needs - temp2.needs_newcomer <= temp2.real_origin: # 충분한 자리가 있는가?
+                    continue # 다음 시간대로 넘김, 요일은 그대로라서 continue
+                for pos in possible:
+                    if pos.day_id == temp2:
+                        # day에 자리가 있으면 추가
+                        createRealSchedule(pos.id)
+                        day_success = 1
+                        count = count + 1
+                        break
+            if count >= limit:
+                break
+
+        if count < limit :
+            origin_minFailList.append(staff)
+
+    print(origin_minFailList)
+
+
+    # 신규 스태프 스케쥴링 - N일
+    print("##### 신입 미소지기 %d 일 스케줄링######" % (n))
+    for staff in newList:
+        count = Real_schedule.objects.filter(staff_id=staff).count()
+        limit = n
+        possible = Possible_schedule.objects.filter(staff_id=staff, day_assigned=False)
+
+        for day in dayList:
+            day_success = 0  # 그 날에 scheduling이 되었는가
+
+            for time in timeList:
+                if day_success != 0:
+                    break
+                temp2 = Day.objects.get(day=day, time=time)  #### day model
+                if temp2.needs_newcomer <= temp2.real_newcomer: # 충분한 자리가 있는가?
+                    continue
+                for pos in possible:
+                    if pos.day_id == temp2:
+                        createRealSchedule(pos.id)
+                        day_success = 1
+                        count = count + 1
+                        break
+            if count >= limit:
+                break
+
+        if count < limit:
+            new_minFailList.append(staff)
+
+
+    # ===============================================================
+    # <Phase3>
+    # ## Modifier ##
+    # 강제 수정
+    # ===============================================================
+    # minFailList에서 3일 배정
+    print("##### 기존 미소지기 %d 일 강제 Modify 진행 중.. ######" % (n))
+    print(origin_minFailList)
+
+    for staff in origin_minFailList:
+        c = modifyFailStaff(staff,n)
+
+    print("##### 신입 미소지기 %d 일 강제 Modify 진행 중.. ######" % (n))
+    for staff in new_minFailList :
+        c = modifyFailStaff(staff,n)
+    return True
 
 def runSchedule():
     originList = []
@@ -162,15 +255,18 @@ def runSchedule():
     print(origin_minFailList)
 
     for staff in origin_minFailList:
-        modifyFailStaff(staff)
+        c = modifyFailStaff(staff,3)
 
     print("##### 신입 미소지기 3일 배정 강제 Modify 진행 중 ... ######")
     for staff in new_minFailList :
-        modifyFailStaff(staff)
+        c = modifyFailStaff(staff,3)
+
+    run_schedule_Ndays(4)
+    run_schedule_Ndays(5)
 
     return True
 
-def modifyFailStaff(staff):
+def modifyFailStaff(staff, hope):
     dayList2 = ['토요일', '일요일', '금요일', '월요일', '화요일', '수요일', '목요일']
     timeList2 = ['D', 'N', 'N1', 'D1', 'N2', 'D2', 'M', 'M1', 'M2', 'M3', 'M4']
     timeList2.reverse()
@@ -182,7 +278,7 @@ def modifyFailStaff(staff):
     for day in dayList2:
         for time in timeList2:
             bolt = 0
-            if count >= 3:  # 3일 planning module 이기 때문에 limit = 3
+            if count >= hope:  # 3일 planning module 이기 때문에 limit = 3
                 # 실제 스케줄이 3일 이상이면 함수종료
                 return count
 
@@ -547,7 +643,7 @@ def staffView(request, staffName, staffPhone):
     dayList = ['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
     print("==========")
     timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
-    timeStr = ['D, 6.75h', '06:30 - 13:30, 6.75h', '09:00 - 16:00, 6.75h', '09:30 - 16:30, 6.75h', '13:00 - 20:00, 6.75h', '14:00 - 21:00, 6.75h', '15:00 - 22:00, 6.75h', '16:00 - 23:00, 6.75h', '20:00 - 27:00, 6.75h', '21:00 - 28:00, 6.75h']
+    timeStr = ['D, 6.75h', '06:30 - 13:30, 6.75h', '09:00 - 16:00, 6.75h', '09:30 - 16:30, 6.75h', '13:00 - 20:00, 6.75h', '14:00 - 21:00, 6.75h', '15:00 - 22:00, 6.75h', '16:00 - 23:00, 6.75h', '18:00 - 25:00, 6.75h','20:00 - 27:00, 6.75h', '21:00 - 28:00, 6.75h']
     possibleDays=[]
     bolt=0
     weekendCount = 0
@@ -756,7 +852,9 @@ def manageRealDayView(request, day):
     dayList = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
     timeList = ['D', 'D1', 'D2', 'M', 'M1', 'M2', 'M3', 'M4', 'N', 'N1', 'N2']
     realAll = Real_schedule.objects.all()
-    context = {'day':day,'dayList':dayList, 'timeList':timeList,'realAll':realAll}
+    dayAll = Day.objects.all()
+    staffAll = Staff.objects.all()
+    context = {'day':day,'dayList':dayList, 'timeList':timeList,'realAll':realAll, 'dayAll':dayAll, 'staffAll':staffAll}
 
     return render(request, 'plan/manager_realSchedules_day.html', context)
 
