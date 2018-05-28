@@ -16,27 +16,23 @@
 
   <div class="container">
     <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-      <h2 class="form-signin-heading">Please sign in</h2>
+      <h2 class="form-signin-heading">미소지기 로그인</h2>
       <form id="fm" method="post">
         {% csrf_token %}
         <label for="inputname" class="sr-only">Name</label>
-        <input type="text" id="inputname" class="form-control" placeholder="Name" name="name" required autofocus>
+        <input type="text" id="inputname" class="form-control" placeholder="미소지기 이름" name="name" required autofocus>
         <label for="inputbirthdate" class="sr-only">Birth-date</label>
-        <input type="text" id="inputbirthdate" class="form-control" placeholder="Phone-Number (ex.01012345678)" name="phone" required>
+        <input type="text" id="inputbirthdate" class="form-control" placeholder="휴대폰 번호 (ex.01012345678)" name="phone" required>
         <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">확인</button>
       </form>
     </div>
-  </div> <!-- /container -->
-
+  </div>
 
   <div class="footer">
 
-  </div> <!-- /container -->
+  </div>
 
 
 <script src="https://ajax.googleais.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
