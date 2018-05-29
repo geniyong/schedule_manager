@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
 #"monkey0201.iptime.org",
-#"geniusYong.iptime.org",
+"geniusYong.iptime.org",
 
 ]
 
