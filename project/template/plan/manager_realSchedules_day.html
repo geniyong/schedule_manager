@@ -131,10 +131,12 @@ td:nth-of-type(1)
                 {{ dayAll | filter_day:day | filter_time:time | filter_real:realAll | get_staff }}
             </td>
             <td>
-                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs}} 명
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs}} 명 /
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs_new}} 명
             </td>
               <td>
-                    {{dayAll | filter_day:day | index:forloop.counter0 | get_needs_new}} 명
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_real_origin}} 명 /
+                    {{dayAll | filter_day:day | index:forloop.counter0 | get_real_new}} 명
             </td>
           </tr>
             {% endfor %}

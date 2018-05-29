@@ -11,7 +11,49 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
+ <style>
+table {
+    border-collapse: collapse;
+    margin:50px auto;
+    }
+/* Zebra striping */
+tr:nth-of-type(odd) {
+    background: #eee;
+    }
 
+th {
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+    }
+td, th {
+    padding: 10px;
+    border: 1px solid #ccc;
+    }
+td {
+    font-size: 12px;
+    }
+th:nth-of-type(1)
+{
+    width: 80px;
+    text-align: center;
+}
+th:nth-of-type(n+2)
+{
+    text-align: center;
+}
+td:nth-of-type(1)
+{
+    text-align: center;
+}
+/* form 태그 간 줄바꿈현상 해결 (줄안바꾸게 style) */
+  form {
+      display: inline;
+  }
+
+  </style>
 </head>
 
 <body>
@@ -56,12 +98,80 @@
 
 		<div id="page-content-wrapper">
         <div class="container-fluid">
-          <h1>간단한 사이드바</h1>
-          <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
-
+          <h1> 미소지기 실제 스케줄 목록 </h1>
         </div>
       </div>
       <!-- /본문 -->
+                  <form id="frm" method="post">
+              <br>
+            {% csrf_token %}
+            <table class="table table-bordered table-hover">
+              <thead>
+               <tr>
+                 <th> 미소지기 </th>
+                 <th>월요일</th>
+                 <th>화요일</th>
+                 <th>수요일</th>
+                 <th>목요일</th>
+                 <th>금요일</th>
+                 <th>토요일</th>
+                 <th>일요일</th>
+                   <th>신청 일 수</th>
+                   <th>실제 일 수</th>
+               </tr>
+              </thead>
+          <tbody>
+            {% for cell in cellList %}
+          <tr>
+            <td>{{cell.name}}</td>
+
+            <td>
+                {% for time in cell.월요일 %}
+                    {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.화요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.수요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.목요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.금요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.토요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+            <td>
+                {% for time in cell.일요일 %}
+                     {{time}}
+                {% endfor %}
+            </td>
+
+            <td>
+                {{cell.신청일}} 일
+            </td>
+            <td>
+                {{cell.근무일}} 일
+            </td>
+          </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+          </form>
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

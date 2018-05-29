@@ -635,8 +635,28 @@ def loginView(request):
 
 
 def managerView(request):
+    dayList =['월요일','화요일','수요일','목요일','금요일','토요일','일요일']
+    if request.method=="GET":
+        staffAll = Staff.objects.all().order_by('name')
+        realAll = Real_schedule.objects.all().order_by('day_id')
+        cellList = []
 
-    return render(request, 'plan/manager.html')
+        for staff in staffAll:
+            staffDic = {'name': "", "월요일": [], "화요일": [], "수요일": [], "목요일": [], "금요일": [], "토요일": [], "일요일": [], "신청일":"","근무일":""}
+            staffreals = realAll.filter(staff_id=staff)
+            staffDic['name'] = staff.name
+            staffDic["신청일"] = staff.possible_N_days
+            staffDic["근무일"] = staffreals.count()
+
+            for staffReal in staffreals :
+                posDay = staffReal.day_id.day    # 신청 가능스케줄의 요일
+                posTime = staffReal.day_id.time   # 신청 가능스케줄의 시간대
+                staffDic[posDay].append(posTime)
+
+            cellList.append(staffDic)
+
+        context = {'staffAll':staffAll,'realAll':realAll, 'dayList':dayList, 'cellList':cellList}
+    return render(request, 'plan/manager.html', context)
 
 
 def staffView(request, staffName, staffPhone):
@@ -776,13 +796,13 @@ def manageNeedsUpdate(request, day):
 
             if needsList[0] == '':
                 if needsList[1] == '':
-                    forupdate.needs_newcomer = int(forupdate.needs) // 3
+                    forupdate.needs_newcomer = 0
                 else:
                     forupdate.needs_newcomer= needsList[1]
             else:
                 forupdate.needs = needsList[0]
                 if needsList[1] == '':
-                    forupdate.needs_newcomer = int(forupdate.needs) // 3
+                    forupdate.needs_newcomer = 0
                 else:
                     forupdate.needs_newcomer= needsList[1]
             forupdate.save()

@@ -28,6 +28,16 @@ def get_needs_new(day):
 
 
 @register.filter
+def get_real_origin(day):
+    return day.real_origin
+
+
+@register.filter
+def get_real_new(day):
+    return day.real_newcomer
+
+
+@register.filter
 def filter_day(dayAll, day):
     return dayAll.filter(day=day)
 
@@ -40,6 +50,11 @@ def filter_time(days, time):
 @register.filter
 def filter_real(dayid, realAll):
     return realAll.filter(day_id=dayid)
+
+
+@register.filter
+def get_real_staff(realAll, staff):
+    return realAll.get(staff_id=staff)
 
 
 @register.filter
