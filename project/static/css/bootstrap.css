@@ -3988,7 +3988,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   float: none;
 }
 .nav-stacked > li > a{
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 .nav-stacked > li + li {
   margin-top: 2px;

@@ -37,13 +37,12 @@
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="/manager/">Schedule Manager</a>
+	      <a class="navbar-brand" href="/manager/">CGV Schedule Manager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
 	      <ul class="nav navbar-nav navbar-right">
-		<li><a href="#">Link</a></li>
 		<li class="dropdown">
 		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
 		  <ul class="dropdown-menu" role="menu">
@@ -61,14 +60,14 @@
 	<div id="page-wrapper">
       <!-- 사이드바 -->
       <div id="sidebar-wrapper">
-        <ul class="nav nav-pills nav-stacked navbar-collapse">
+        <ul class="sidebar-nav nav nav-pills nav-stacked navbar-collapse">
           <li><a href="/manager/staff">미소지기 평가</a></li>
           <li><a href="/manager/possible">가능 스케줄</a></li>
           <li><a href="/manager/hr">필요 인력</a></li>
           <li><a href="/manager/real">실제 스케줄</a></li>
         </ul>
        	<ul class="sidebar-nav btn-padding-30">
-          <button type="button" class="btn btn-success btn-lg">Make Schedules</button>
+          <button type="button" class="btn btn-success" disabled="disabled">Make Schedules</button>
        	</ul>
       </div>
       <!-- /사이드바 -->
@@ -105,9 +104,8 @@
             {% endfor %}
         </table>
 
-        <br>
           <form action="/manager/hr/update/월요일/">
-          <button class="btn btn-default" type="submit">필요인력 수정하러 가기</button>
+            <button class="btn btn-default" type="submit">필요인력 수정하러 가기</button>
           </form>
         </div>
       </div>

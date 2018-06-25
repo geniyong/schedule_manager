@@ -594,6 +594,7 @@ def loginView(request):
        for time in timeList:
            Day(day=day, time=time).save()
     '''
+    #Real_schedule.objects.all().delete()
     context = {}
     if request.method == 'POST':
         post = request.POST
@@ -607,7 +608,6 @@ def loginView(request):
                 return redirect('../manager/')
             else:
                 context['message'] = "권한오류 : 매니저 정보를 다시 입력하세요"
-                context['mode'] = 1
                 return render_to_response('plan/loginAlert.html', context)
 
         print(staffName + ':' + staffPhone)
@@ -841,7 +841,6 @@ def possibleSearchView(request):
     if request.method=="GET":
         staffAll = Staff.objects.all().order_by('name')
         possibleAll = Possible_schedule.objects.all().order_by('day_id')
-        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
 
         name = request.GET.get('name', '')
         day = request.GET.get('day', '')
@@ -854,6 +853,76 @@ def possibleSearchView(request):
         print("get.time : ", end="")
         print(time)
 
+        # 이름으로 검색
+        if(name != '') :
+            # 스태프
+            staffAll = staffAll.filter(name=name)
+            q = staffAll
+            # 스케줄
+            result = []
+            for staff in q:
+                qs = possibleAll.filter(staff_id=staff)
+
+                for possible in qs:
+                    result.append(possible)
+
+            possibleAll = result
+            print(possibleAll)
+
+        # 요일로 검색
+        if(day != '') :
+            # 스케줄
+            dayList = [day]
+            result = []
+            if(name !=''):
+                for ps in possibleAll:
+                    if ps.day_id.day == day:
+                            result.append(ps)
+
+            else:
+                d = Day.objects.filter(day=day)
+                for ds in d:
+                    q = possibleAll.filter(day_id=ds)
+                    for qs in q:
+                        result.append(qs)
+
+            possibleAll = result
+
+        # 시간으로 검색
+        if(time != '') :
+            # 스케줄
+            result = []
+            if (name != '' or day != ''):
+                for ps in possibleAll:
+                    if ps.day_id.time == time:
+                            result.append(ps)
+
+            else:
+                t = Day.objects.filter(time=time)
+                for ts in t:
+                    q = possibleAll.filter(day_id=ts)
+                    for qs in q:
+                        result.append(qs)
+
+            possibleAll = result
+
+        # 요일과 시간 검색 : 스태프
+        if(day != '' or time !=''):
+            posStf = []
+
+            for pos in possibleAll:
+                if not posStf.__contains__(pos.staff_id):
+                    posStf.append(pos.staff_id)
+            result = []
+            for stf in staffAll:
+                if posStf.__contains__(stf):
+                    result.append(stf)
+            staffAll = result
+
+        context = {'staffAll':staffAll,'possibleAll':possibleAll, 'dayList':dayList}
+
+        if(day=='' and time =='' and name==''):
+            context = {'dayList': dayList}
 
     return render(request, 'plan/manager_possibles_search.html', context)
 

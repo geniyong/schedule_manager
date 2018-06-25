@@ -2,24 +2,9 @@
 <html lang="en">
 <body>
 <script>
-var message = "{{message}}";
-var mode = "{{mode}}";
-if(mode==1){
-alert(message);
-window.location.href = '/login/';
-}
-else if (mode == 2)
-{
-    if(confirm(message))
-    {
-        return true;
-    }
-
-    else
-    {
-        return false;
-    }
-}
+    var message = "{{message}}";
+    alert(message);
+    window.location.href = '/login/';
 </script>
 </body>
 </html>

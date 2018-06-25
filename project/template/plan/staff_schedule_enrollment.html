@@ -12,9 +12,17 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'css/miso.css' %}"/>
   <style>
-      .form-group > .form-control {
-        left-margin: -5px;
-      }
+  .form-group > .form-control {
+    left-margin: -5px;
+  }
+
+  #sidebar-wrapper {
+    height: 160px;
+  }
+
+  .sidebar-nav li {
+    line-height: 2em;
+  }
 
   </style>
 
@@ -35,13 +43,12 @@
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="/staff/{{staffName}}/{{staffPhone}}">Schedule Manager</a>
+	      <a class="navbar-brand" href="/staff/{{staffName}}/{{staffPhone}}">CGV Schedule Manager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="navbar-collapse collapse" id="navbar-collapse-1">
 	      <ul class="nav navbar-nav navbar-right">
-		<li><a href="#">Link</a></li>
 		<li class="dropdown">
 		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">E-mail<span class="caret"></span></a>
 		  <ul class="dropdown-menu" role="menu">
@@ -59,7 +66,7 @@
 	<div id="page-wrapper">
       <!-- 사이드바 -->
       <div id="sidebar-wrapper">
-        <ul class="nav nav-pills nav-stacked navbar-collapse">
+        <ul class="sidebar-nav nav nav-pills nav-stacked navbar-collapse">
           <li><a href="/staff/{{staffName}}/{{staffPhone}}">근무 가능시간 등록</a></li>
           <li><a href="/staff/{{staffName}}/{{staffPhone}}/real">실제근무배정 확인</a></li>
         </ul>
